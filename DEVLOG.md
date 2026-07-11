@@ -1,0 +1,35 @@
+# DEVLOG
+
+## 2026-07-10 — Switchgewicht calculator
+Simpele single-file HTML app (`index.html`): vraagt startgewicht bol + gewenst restgewicht, berekent bij welk gewicht je switcht van increases naar decreases in de Sophie Shawl (symmetrische increase/decrease helften, dus switchpunt = start - (start-restgewicht)/2).
+
+## 2026-07-10 — Optie A gekozen als hoofdstructuur
+Multi-page aanpak (losse HTML-bestanden per tool + gedeelde `style.css`, startscherm met tool-kaarten). Nieuwe tools toevoegen = nieuw `.html`-bestand + kaart in `index.html`'s `.tool-list`.
+
+## 2026-07-10 — iOS liquid-glass restyle + zachter kleurenpalet
+Frosted-glass cards (`backdrop-filter`), comma/punt input parsing, spring-easing animaties. Kleurenpalet vervangen naar roze/lavendel (`--wool-rose` #d98e94, `--wool-lavender` #a692b8) i.p.v. mosterd/salie; terracotta blijft hoofdaccent.
+
+## 2026-07-10 — Fix: zichtbaar lijntje in glass-cards
+Root cause: `::before`/`::after` pseudo-elementen renderen als aparte compositing-laag bovenop `backdrop-filter`, wat een naad geeft op de laagrand (niet caching, niet squircle, niet banding). Opgelost door highlights direct te bakken in de `background`-property zelf (gestapelde gradients in één declaratie op `.glass`/`.result-card`), geen pseudo-elementen meer.
+
+## 2026-07-11 — Sokmaat herbouwd tot volledig sokkenpatroon (cuff-down/toe-up)
+Root cause vorige versie: losse, niet-samenhangende getallen (steken hier, rondes daar) i.p.v. een doorlopend recept — bevestigd via web-research naar echte sokken-calculators (KnitCalculator, Super Sock Calculator, GoodKnit Kisses), die allemaal een stap-voor-stap recept geven.
+`sokmaat.html` herbouwd als recept-generator: boord → been → hiel (German short row, geen gusset) → voet → teen (2-fase magic-formula afname/toename), met een cuff-down/toe-up schakelaar (`.toggle-row`/`.toggle-btn` in `style.css`) en genummerde stappenlijst (`.steps`/`.step`). EU-schoenmaat-autofill (EU × ⅔ cm) behouden. Kaart in `index.html` hernoemd naar "Sokkenpatroon".
+
+## 2026-07-11 — Sokmaat: ribpatroon als recht×averecht, losse boordlengte, scroll-top knop
+Ribpatroon-veelvoud was verwarrend als los invoerveld (naam onduidelijk, gebruiker rekende per ongeluk × i.p.v. +). Opgesplitst in twee velden `ribKnit`/`ribPurl` (bv. 2 en 2 voor "2x2 rib"), app telt zelf op tot het veelvoud. Daarnaast bleek beenlengte geen apart boordlengte-veld te hebben — stap-tekst suggereerde dat de hele beenlengte in rib gebreid werd. Nieuw veld `cuffLength` toegevoegd; rijen worden nu gesplitst in `cuffRows` (rib) + `stockinetteRows`, som = totale beenlengte (expliciet in de field-hint: "inclusief de boord, niet erbovenop optellen"). Ook een scroll-naar-boven knop (`.scroll-top-btn` in `style.css`, rechtsonder, verschijnt vanaf `scrollY > 300`) toegevoegd aan `sokmaat.html`, `switchgewicht.html` en `garenschatting.html`.
+
+## 2026-07-11 — PWA: manifest + app-icoon voor "Zet op beginscherm"
+Voor testen op telefoon: `manifest.json` toegevoegd (naam, standalone display, terracotta theme-color) + icoon gegenereerd met Pillow (`icon-512.png`, `icon-192.png`, `apple-touch-icon.png`, `favicon-32.png` — garenbol met kruisende breinaalden, roze/terracotta gradient, geen SVG-tooling nodig/beschikbaar dus rechtstreeks als PNG getekend). Head-tags (`manifest`, `theme-color`, `apple-touch-icon`, `apple-mobile-web-app-capable`) toegevoegd aan alle 5 pagina's. Resultaat: "Zet op beginscherm" op iOS/Android opent nu fullscreen met eigen icoon i.p.v. een Safari-snapshot.
+
+## 2026-07-11 — Fix: witte rand als PWA op iPhone
+Twee losse randjes na "Zet op beginscherm": (1) onderaan wit door ontbrekende `viewport-fit=cover` — safe-area (home-indicator) werd niet door de achtergrond gedekt. Toegevoegd aan alle 5 pagina's + `env(safe-area-inset-*)` padding op `body` en `.scroll-top-btn`. (2) dun randje aan weerszijden op bredere telefoons (bv. Pro Max) — achtergrond (gradient-vlekken + chevron-patroon) zat op `body`, die maar `max-width: 420px` is en centreert; `html` erachter had alleen de vlakke kleur. Achtergrond volledig verplaatst van `body` naar `html` zodat hij altijd de hele viewportbreedte dekt; `body` is nu transparant.
+
+## 2026-07-11 — App-icoon vervangen door OpenArt-generatie (GPT Image 2)
+Zelfgetekende Pillow-icoon verving door een AI-gegenereerd icoon via OpenArt (`gpt-image-2`, text2image, 2K): garenbol met kruisende breinaalden, roze→terracotta gradient, iOS-liquid-glass highlight linksboven. Bron opgeslagen als 1360×1360 PNG, daaruit `icon-512.png`/`icon-192.png`/`apple-touch-icon.png` geresized (Lanczos). `favicon-32.png` apart verwerkt met een strakkere crop + extra contrast/sharpening, anders vervaagde de garenbol-textuur op 32px.
+
+## 2026-07-11 — Fix: terugknop viel onder de klok op iPhone
+`.back-link` had een vaste `top: 18px`, zonder rekening met de iOS safe-area (statusbalk/klok/Dynamic Island). Zelfde patroon toegepast als bij de scroll-top-knop: `top: calc(18px + env(safe-area-inset-top))` (`style.css`). Geldt voor alle 3 pagina's met `.back-link` (`switchgewicht.html`, `sokmaat.html`, `garenschatting.html`).
+
+## 2026-07-10 — Echte Lucide/Heroicons iconen + subtiel achtergrondpatroon
+`opties.html` uitgebreid met meerdere echte Lucide/Heroicons SVG's (scale, weight, gauge, package, ruler e.a.) naast custom varianten. Gekozen: Lucide "scale" voor Switchgewicht, Lucide "package" voor Garenschatting — toegepast in `index.html`, `switchgewicht.html`, `garenschatting.html`. Achtergrond in `style.css` uitgebreid met een combinatie van de bestaande radiale kleurvlekken plus een zeer subtiel chevron-SVG-patroon (`background-image` tiled laag, opacity 0.08) via `background-color`/`background-image`/`background-size`.

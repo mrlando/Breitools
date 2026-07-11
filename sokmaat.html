@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Sokkenpatroon - Breitools</title>
+<link rel="stylesheet" href="style.css">
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#c1694f">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="icon" href="favicon-32.png" sizes="32x32">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+</head>
+<body>
+  <a class="back-link" href="index.html">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 6l-6 6 6 6"/></svg>
+    Terug
+  </a>
+  <div class="header">
+    <div class="icon">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M6.5 3h6a1.5 1.5 0 0 1 1.5 1.5v6.4c0 1.2.4 2.4 1.2 3.3l3 3.6a2.3 2.3 0 0 1-1.8 3.8H7a2.5 2.5 0 0 1-2.5-2.5V5.5A2.5 2.5 0 0 1 6.5 3Z"/>
+        <path d="M5 8h9"/>
+      </svg>
+    </div>
+    <h1>Sokkenpatroon</h1>
+    <p class="sub">Volledig recept: boord tot teen (German short row hiel)</p>
+  </div>
+
+  <div class="toggle-row">
+    <button type="button" class="toggle-btn active" id="btnCuffDown">Cuff-down</button>
+    <button type="button" class="toggle-btn" id="btnToeUp">Toe-up</button>
+  </div>
+
+  <div class="card glass">
+    <div class="field">
+      <label for="gauge">Steken per 10 cm (gauge)</label>
+      <input type="text" inputmode="decimal" id="gauge" value="30">
+    </div>
+    <div class="field">
+      <label for="rowGauge">Rijen per 10 cm</label>
+      <input type="text" inputmode="decimal" id="rowGauge" value="42">
+    </div>
+    <div class="field">
+      <label for="circumference">Voetomtrek (cm)</label>
+      <input type="text" inputmode="decimal" id="circumference" value="21">
+    </div>
+    <div class="field">
+      <label for="ease">Negatieve ease (%)</label>
+      <input type="text" inputmode="decimal" id="ease" value="10">
+      <p class="field-hint">Hoeveel kleiner de sok is dan je voetomtrek, zodat de rekbare stof strak genoeg zit.</p>
+    </div>
+    <div class="field">
+      <label>Ribpatroon (boord)</label>
+      <div class="field-pair">
+        <input type="text" inputmode="decimal" id="ribKnit" value="2" aria-label="Aantal rechte steken">
+        <span class="field-pair-sep">×</span>
+        <input type="text" inputmode="decimal" id="ribPurl" value="2" aria-label="Aantal averechte steken">
+      </div>
+      <p class="field-hint">Recht × averecht steken van de rib, bv. 2x2. Het opgezette aantal steken wordt afgerond op de som (hier 4).</p>
+    </div>
+    <div class="field">
+      <label for="euSize">EU-schoenmaat (optioneel)</label>
+      <input type="text" inputmode="decimal" id="euSize" placeholder="bv. 39">
+      <p class="field-hint">Vult de voetlengte automatisch in via een vuistregel (EU-maat × ⅔ cm) — zelf opmeten is nauwkeuriger.</p>
+    </div>
+    <div class="field">
+      <label for="footLength">Voetlengte (cm)</label>
+      <input type="text" inputmode="decimal" id="footLength" value="26">
+    </div>
+    <div class="field">
+      <label for="legLength" id="legLengthLabel">Beenlengte, boord tot hiel (cm)</label>
+      <input type="text" inputmode="decimal" id="legLength" value="15">
+      <p class="field-hint">Totale lengte inclusief de boord zelf — niet erbovenop optellen.</p>
+    </div>
+    <div class="field">
+      <label for="cuffLength">Boordlengte (cm)</label>
+      <input type="text" inputmode="decimal" id="cuffLength" value="4">
+      <p class="field-hint">Hoeveel van de beenlengte in rib gebreid wordt (bv. 4 cm); de rest is stockinette.</p>
+    </div>
+  </div>
+
+  <ol class="steps" id="stepsList"></ol>
+
+  <button class="scroll-top-btn" id="scrollTopBtn" aria-label="Naar boven">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5"/><path d="m5 12 7-7 7 7"/></svg>
+  </button>
+
+  <p class="hint">De German short row hiel gebruikt geen gusset — je werkt gewoon door op alle steken zodra de hiel klaar is.</p>
+
+<script>
+  const gaugeInput = document.getElementById('gauge');
+  const rowGaugeInput = document.getElementById('rowGauge');
+  const circInput = document.getElementById('circumference');
+  const easeInput = document.getElementById('ease');
+  const ribKnitInput = document.getElementById('ribKnit');
+  const ribPurlInput = document.getElementById('ribPurl');
+  const euSizeInput = document.getElementById('euSize');
+  const footLengthInput = document.getElementById('footLength');
+  const legLengthInput = document.getElementById('legLength');
+  const legLengthLabel = document.getElementById('legLengthLabel');
+  const cuffLengthInput = document.getElementById('cuffLength');
+  const stepsList = document.getElementById('stepsList');
+  const btnCuffDown = document.getElementById('btnCuffDown');
+  const btnToeUp = document.getElementById('btnToeUp');
+
+  let construction = 'cuffdown';
+
+  function parseNum(str) {
+    if (!str) return NaN;
+    return parseFloat(str.replace(',', '.'));
+  }
+
+  function roundToMultiple(x, m) {
+    return Math.round(x / m) * m;
+  }
+
+  function roundToEven(x) {
+    return Math.round(x / 2) * 2;
+  }
+
+  function fmt(x) {
+    return x.toFixed(1).replace(/\.0$/, '').replace('.', ',');
+  }
+
+  function setConstruction(value) {
+    construction = value;
+    btnCuffDown.classList.toggle('active', value === 'cuffdown');
+    btnToeUp.classList.toggle('active', value === 'toeup');
+    legLengthLabel.textContent = value === 'cuffdown'
+      ? 'Beenlengte, boord tot hiel (cm)'
+      : 'Beenlengte, hiel tot boord (cm)';
+    calculate();
+  }
+
+  function stepHtml(num, title, detail) {
+    return '<li class="step glass"><span class="step-num">' + num + '</span>' +
+      '<span class="step-body"><span class="step-title">' + title + '</span>' +
+      '<span class="step-detail">' + detail + '</span></span></li>';
+  }
+
+  function calculate() {
+    const gauge = parseNum(gaugeInput.value);
+    const rowGauge = parseNum(rowGaugeInput.value);
+    const circumference = parseNum(circInput.value);
+    const ease = parseNum(easeInput.value);
+    const ribKnit = parseNum(ribKnitInput.value);
+    const ribPurl = parseNum(ribPurlInput.value);
+    const multiple = ribKnit + ribPurl;
+    const footLength = parseNum(footLengthInput.value);
+    const legLength = parseNum(legLengthInput.value);
+    const cuffLength = parseNum(cuffLengthInput.value);
+
+    if ([gauge, rowGauge, circumference, ease, ribKnit, ribPurl, footLength, legLength, cuffLength].some(isNaN)
+        || gauge <= 0 || rowGauge <= 0 || circumference <= 0 || ribKnit <= 0 || ribPurl <= 0 || footLength <= 0 || legLength < 0
+        || cuffLength < 0 || cuffLength > legLength) {
+      stepsList.innerHTML = '<li class="step glass"><span class="step-body"><span class="step-title">Vul alle velden geldig in</span></span></li>';
+      return;
+    }
+
+    const stPerCm = gauge / 10;
+    const rowPerCm = rowGauge / 10;
+
+    // Boord: steken op te zetten
+    const effectiveCirc = circumference * (1 - ease / 100);
+    const exactSts = effectiveCirc * stPerCm;
+    const sockSts = roundToMultiple(exactSts, multiple);
+
+    // Been: boord (rib) + stockinette
+    const legRows = Math.round(legLength * rowPerCm);
+    const cuffRows = Math.round(cuffLength * rowPerCm);
+    const stockinetteRows = Math.max(legRows - cuffRows, 0);
+
+    // Hiel (German short row, geen gusset): werkt over de helft van de steken
+    const heelSts = roundToEven(sockSts / 2);
+    const centerSts = roundToEven(heelSts / 3);
+    const turnsPerSide = Math.round((heelSts - centerSts) / 2);
+
+    // Teen: fase 1 -4 st/2 rondes tot 50%, fase 2 -4 st/ronde tot 8-12 st
+    const finalToeSts = sockSts >= 40 ? 12 : 8;
+    const phase1Target = Math.max(roundToMultiple(sockSts / 2, 4), finalToeSts + 8);
+    const decEventsPhase1 = Math.round((sockSts - phase1Target) / 4);
+    const roundsPhase1 = decEventsPhase1 * 2;
+    const decEventsPhase2 = Math.round((phase1Target - finalToeSts) / 4);
+    const roundsPhase2 = decEventsPhase2;
+    const toeRounds = roundsPhase1 + roundsPhase2;
+    const toeLengthCm = toeRounds / rowPerCm;
+
+    // Voet: recht stuk tussen hiel/teen-start en teen
+    const footRounds = Math.max(Math.round((footLength - toeLengthCm) * rowPerCm), 0);
+
+    // Toe-up: startaantal voor Judy's Magic CO en toename-rondes (spiegelbeeld van de afname)
+    const toeUpStartSts = Math.max(roundToEven(finalToeSts), 8);
+
+    let html = '';
+    if (construction === 'cuffdown') {
+      html += stepHtml(1, sockSts + ' steken opzetten (boord)',
+        'Long-tail of German twisted cast-on, ' + ribKnit + 'x' + ribPurl + ' rib. Effectieve omtrek: ' + fmt(effectiveCirc) + ' cm.');
+      html += stepHtml(2, legRows + ' rijen been breien',
+        cuffRows + ' rijen ' + ribKnit + 'x' + ribPurl + ' rib (' + fmt(cuffLength) + ' cm boord), dan ' + stockinetteRows + ' rijen stockinette tot de hiel — samen ' + fmt(legLength) + ' cm.');
+      html += stepHtml(3, 'Hiel: German short row over ' + heelSts + ' steken',
+        turnsPerSide + ' korte rijen aan elke kant, ' + centerSts + ' steken blijven in het midden ongewerkt. Geen gusset — daarna gewoon door op alle ' + sockSts + ' steken.');
+      html += stepHtml(4, footRounds + ' rondes voet recht breien',
+        'In de ronde op alle ' + sockSts + ' steken, tot ' + fmt(footLength) + ' cm min de teenlengte (' + fmt(toeLengthCm) + ' cm).');
+      html += stepHtml(5, 'Teen: ' + toeRounds + ' rondes afname',
+        'Fase 1: -4 st om de ronde tot ' + phase1Target + ' st (' + roundsPhase1 + ' rondes). Fase 2: -4 st elke ronde tot ' + finalToeSts + ' st (' + roundsPhase2 + ' rondes). Sluit met kitchener stitch.');
+    } else {
+      html += stepHtml(1, toeUpStartSts + ' steken opzetten (teen)',
+        "Judy's Magic Cast-on, verdeeld over 2 naalden.");
+      html += stepHtml(2, 'Teen: ' + toeRounds + ' rondes toename tot ' + sockSts + ' steken',
+        'Spiegelbeeld van de afname: +4 st elke ronde tot ' + phase1Target + ' st, dan +4 st om de ronde tot ' + sockSts + ' st.');
+      html += stepHtml(3, footRounds + ' rondes voet recht breien',
+        'In de ronde op alle ' + sockSts + ' steken, tot ' + fmt(footLength) + ' cm min de teenlengte (' + fmt(toeLengthCm) + ' cm).');
+      html += stepHtml(4, 'Hiel: German short row over ' + heelSts + ' steken',
+        turnsPerSide + ' korte rijen aan elke kant, ' + centerSts + ' steken blijven in het midden ongewerkt. Geen gusset — daarna gewoon door op alle ' + sockSts + ' steken.');
+      html += stepHtml(5, legRows + ' rijen been breien tot boord',
+        stockinetteRows + ' rijen stockinette, dan ' + cuffRows + ' rijen ' + ribKnit + 'x' + ribPurl + ' rib (' + fmt(cuffLength) + ' cm boord) — samen ' + fmt(legLength) + ' cm. Sluit af met een rekbare afkanting (bv. tubular of sewn bind-off).');
+    }
+    stepsList.innerHTML = html;
+  }
+
+  euSizeInput.addEventListener('input', () => {
+    const euSize = parseNum(euSizeInput.value);
+    if (isNaN(euSize) || euSize <= 0) return;
+    const estimatedLength = euSize * (2 / 3);
+    footLengthInput.value = fmt(estimatedLength);
+    calculate();
+  });
+
+  btnCuffDown.addEventListener('click', () => setConstruction('cuffdown'));
+  btnToeUp.addEventListener('click', () => setConstruction('toeup'));
+
+  [gaugeInput, rowGaugeInput, circInput, easeInput, ribKnitInput, ribPurlInput, footLengthInput, legLengthInput, cuffLengthInput]
+    .forEach(el => el.addEventListener('input', calculate));
+
+  calculate();
+
+  const scrollTopBtn = document.getElementById('scrollTopBtn');
+  window.addEventListener('scroll', () => {
+    scrollTopBtn.classList.toggle('visible', window.scrollY > 300);
+  });
+  scrollTopBtn.addEventListener('click', () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  });
+</script>
+</body>
+</html>

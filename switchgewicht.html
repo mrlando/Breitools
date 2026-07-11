@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Switchgewicht - Breitools</title>
+<link rel="stylesheet" href="style.css">
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#c1694f">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="icon" href="favicon-32.png" sizes="32x32">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+</head>
+<body>
+  <a class="back-link" href="index.html">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 6l-6 6 6 6"/></svg>
+    Terug
+  </a>
+  <div class="header">
+    <div class="icon">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M12 3v18"/>
+        <path d="m19 8 3 8a5 5 0 0 1-6 0zV7"/>
+        <path d="M3 7h1a17 17 0 0 0 8-2 17 17 0 0 0 8 2h1"/>
+        <path d="m5 8 3 8a5 5 0 0 1-6 0zV7"/>
+        <path d="M7 21h10"/>
+      </svg>
+    </div>
+    <h1>Switchgewicht</h1>
+    <p class="sub">Sophie Shawl: increase → decrease</p>
+  </div>
+
+  <div class="card glass">
+    <div class="field">
+      <label for="startWeight">Startgewicht bol (g)</label>
+      <input type="text" inputmode="decimal" id="startWeight" value="102">
+    </div>
+    <div class="field">
+      <label for="leftoverWeight">Gewenst restgewicht (g)</label>
+      <input type="text" inputmode="decimal" id="leftoverWeight" value="1">
+    </div>
+  </div>
+
+  <div class="result-card glass">
+    <div class="value" id="switchWeight">-</div>
+    <div class="label">gram in de bol bij switchpunt</div>
+    <div class="rounded-row">
+      <span class="rounded-value" id="switchWeightRounded">-</span>
+      <span class="rounded-label">afgerond naar boven</span>
+    </div>
+  </div>
+
+  <p class="hint">Switch bij <strong>afgeronde</strong> weging (naar boven) — liever iets eerder switchen dan te laat.</p>
+
+  <button class="scroll-top-btn" id="scrollTopBtn" aria-label="Naar boven">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5"/><path d="m5 12 7-7 7 7"/></svg>
+  </button>
+
+<script>
+  const startInput = document.getElementById('startWeight');
+  const leftoverInput = document.getElementById('leftoverWeight');
+  const output = document.getElementById('switchWeight');
+  const outputRounded = document.getElementById('switchWeightRounded');
+
+  function parseNum(str) {
+    if (!str) return NaN;
+    return parseFloat(str.replace(',', '.'));
+  }
+
+  function calculate() {
+    const start = parseNum(startInput.value);
+    const leftover = parseNum(leftoverInput.value);
+    if (isNaN(start) || isNaN(leftover) || start <= leftover) {
+      output.textContent = '-';
+      outputRounded.textContent = '-';
+      return;
+    }
+    const usable = start - leftover;
+    const switchWeight = start - usable / 2;
+    output.textContent = switchWeight.toFixed(1).replace('.', ',') + ' g';
+    outputRounded.textContent = Math.ceil(switchWeight) + ' g';
+  }
+
+  startInput.addEventListener('input', calculate);
+  leftoverInput.addEventListener('input', calculate);
+  calculate();
+
+  const scrollTopBtn = document.getElementById('scrollTopBtn');
+  window.addEventListener('scroll', () => {
+    scrollTopBtn.classList.toggle('visible', window.scrollY > 300);
+  });
+  scrollTopBtn.addEventListener('click', () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  });
+</script>
+</body>
+</html>
