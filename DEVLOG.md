@@ -2,6 +2,9 @@
 
 (oudere entries: zie DEVLOG_ARCHIVE.md)
 
+## 2026-07-12 — Ingevoerde waardes worden onthouden per pagina
+Elk tool-veld sprong terug naar de hardcoded default zodra de pagina herladen werd — vervelend voor een geïnstalleerde PWA die vaker heropend wordt. Generieke oplossing in `common.js`: bij `DOMContentLoaded` worden alle `input[type="text"][id]`-velden op de pagina automatisch hersteld uit `localStorage` (key `inputVal:<pathname>:<id>`) en bij elke `input`-event opgeslagen; geen per-pagina lijst met veld-ids nodig. Na het herstellen wordt op elk veld een `input`-event gedispatcht zodat bestaande `calculate()`/sync-logica (bv. de EU-maat↔voetlengte-koppeling in sokkentool) gewoon opnieuw draait met de herstelde waardes. Geverifieerd: garenschatting-veld naar 777 gezet en herladen → bleef 777 (5 bollen); sokkentool EU-maat naar 41 gezet en herladen → EU 41 + voetlengte 25,8 cm + juiste stitches bleven behouden, geen console-fouten.
+
 ## 2026-07-12 — Periodieke version-check i.p.v. alleen bij laden
 App bleef als geïnstalleerde PWA vaak op een oude versie hangen — de check in `version-check.js` liep tot nu toe alleen één keer bij het laden van de pagina, en een homescreen-app die dagenlang open/op de achtergrond blijft krijgt dat laadmoment nooit opnieuw. Check omgezet naar een herbruikbare `checkVersion()`-functie: draait nu ook elke 3 minuten via `setInterval`, én meteen zodra de app weer zichtbaar wordt na de achtergrond (`visibilitychange`, `!document.hidden`). Om een herlaad niet midden in het typen te forceren, slaat `checkVersion()` over als `document.activeElement` een `INPUT` is — de volgende cyclus probeert het gewoon opnieuw. Geverifieerd: oude `buildVersion` (1) in localStorage gezet, na herladen automatisch bijgewerkt naar de actuele VERSION (18), geen console-fouten.
 
