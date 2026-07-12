@@ -1,5 +1,8 @@
 # DEVLOG
 
+## 2026-07-12 — App-titel: "Breitools" → "Monika's breitools"
+Hernoemd op alle plekken: `<title>`/`<h1>` in `index.html`, `<title>` van de 3 tool-pagina's, en `name`/`short_name` in `manifest.json` (bepaalt het label onder het "Zet op beginscherm"-icoon).
+
 ## 2026-07-12 — Sokkentool: toe-up verwijderd, hernoemd naar sokkentool.html
 Volledige toe-up-constructie uit `sokmaat.html` verwijderd (toggle-knoppen, `setConstruction`, toe-up-tak in `calculate()`, en de daaraan gekoppelde variabelen `heelSts`/`centerSts`/`turnsPerSide`/`toeUpStartSts`) — cuff-down is nu de enige constructiemethode. Rondes/steken-teksten in stap 3 herschreven naar rows/stitches, stap 3 (hiel) is eerder al vervallen. Hint-zin over de German short row hiel onderaan verwijderd (verwees naar een hiel-stap die niet meer bestaat). Bestand hernoemd naar `sokkentool.html` (`git mv`), link in `index.html` bijgewerkt.
 
