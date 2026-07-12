@@ -41,6 +41,7 @@
     <div class="field">
       <label for="circumference">Voetomtrek (cm)</label>
       <input type="text" inputmode="decimal" id="circumference" value="21">
+      <p class="field-hint">Wordt automatisch geschat als je een EU-schoenmaat invult — zelf opmeten is nauwkeuriger.</p>
     </div>
     <div class="field">
       <label for="ease">Negatieve ease (%)</label>
@@ -59,7 +60,7 @@
     <div class="field">
       <label for="euSize">EU-schoenmaat (optioneel)</label>
       <input type="text" inputmode="decimal" id="euSize" placeholder="bv. 41">
-      <p class="field-hint">Vult de voetlengte automatisch in via een vuistregel (EU-maat × ⅔ cm − 1,5 cm) — zelf opmeten is nauwkeuriger.</p>
+      <p class="field-hint">Vult automatisch de voetlengte (vuistregel EU-maat × ⅔ cm − 1,5 cm) én de voetomtrek in (op basis van Regia's opzet-tabel per maat, omgerekend naar jouw gauge/ease) — zelf opmeten blijft nauwkeuriger.</p>
     </div>
     <div class="field">
       <label for="footLength">Voetlengte (cm)</label>
@@ -111,6 +112,26 @@
 
   function fmt(x) {
     return x.toFixed(1).replace(/\.0$/, '').replace('.', ',');
+  }
+
+  // Regia 4-ply maattabel (opzetsteken per EU-schoenmaat, gauge 30 st/10cm), middelpunt van elke maatbrug
+  const SIZE_TABLE = [
+    { eu: 22.5, sts: 44 }, { eu: 24.5, sts: 48 }, { eu: 26.5, sts: 48 }, { eu: 28.5, sts: 52 },
+    { eu: 30.5, sts: 52 }, { eu: 32.5, sts: 56 }, { eu: 34.5, sts: 56 }, { eu: 36.5, sts: 60 },
+    { eu: 38.5, sts: 60 }, { eu: 40.5, sts: 64 }, { eu: 42.5, sts: 64 }, { eu: 44.5, sts: 68 },
+    { eu: 46.5, sts: 72 }
+  ];
+
+  function interpolateCastOnSts(euSize) {
+    if (euSize <= SIZE_TABLE[0].eu) return SIZE_TABLE[0].sts;
+    if (euSize >= SIZE_TABLE[SIZE_TABLE.length - 1].eu) return SIZE_TABLE[SIZE_TABLE.length - 1].sts;
+    for (let i = 0; i < SIZE_TABLE.length - 1; i++) {
+      const a = SIZE_TABLE[i], b = SIZE_TABLE[i + 1];
+      if (euSize >= a.eu && euSize <= b.eu) {
+        const t = (euSize - a.eu) / (b.eu - a.eu);
+        return a.sts + t * (b.sts - a.sts);
+      }
+    }
   }
 
   function stepHtml(num, title, detail) {
@@ -185,6 +206,14 @@
     if (isNaN(euSize) || euSize <= 0) return;
     const estimatedLength = euSize * (2 / 3) - 1.5;
     footLengthInput.value = fmt(estimatedLength);
+
+    const gauge = parseNum(gaugeInput.value);
+    const ease = parseNum(easeInput.value);
+    if (!isNaN(gauge) && gauge > 0 && !isNaN(ease) && ease < 100) {
+      const castOnSts = interpolateCastOnSts(euSize);
+      const effectiveCirc = castOnSts / (gauge / 10);
+      circInput.value = fmt(effectiveCirc / (1 - ease / 100));
+    }
     calculate();
   });
 
