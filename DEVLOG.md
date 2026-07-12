@@ -1,5 +1,8 @@
 # DEVLOG
 
+## 2026-07-12 — Fix: EU-schoenmaat → voetlengte vuistregel klopte niet
+`EU × ⅔ cm` (zonder correctie) overschatte de voetlengte structureel met 1,0–1,4 cm t.o.v. de Ziengs-maattabellen (ziengs.nl/maatwijzer) — ⅔ is wel de juiste Franse-schoenmaat-factor, maar mist de teenspeling-marge die in een schoenleest zit. Formule in `sokmaat.html` aangepast naar `EU × ⅔ cm − 1,5 cm`, brengt de afwijking terug naar ±0,6 cm over het hele volwassen bereik (EU 36–50). Field-hint tekst bijgewerkt.
+
 ## 2026-07-10 — Switchgewicht calculator
 Simpele single-file HTML app (`index.html`): vraagt startgewicht bol + gewenst restgewicht, berekent bij welk gewicht je switcht van increases naar decreases in de Sophie Shawl (symmetrische increase/decrease helften, dus switchpunt = start - (start-restgewicht)/2).
 
