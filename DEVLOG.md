@@ -1,5 +1,8 @@
 # DEVLOG
 
+## 2026-07-12 — Sokmaat cuff-down: stap 4 teruggebracht tot alleen voet-rondes
+Vorige samenvoeging van voet+teen in stap 4 bleek niet de bedoeling — stap 4 moet alleen de rondes van na de hiel tot de teen tonen (net als stap 2 z'n been-rondes toont), zonder de teen-afname erin. Titel/detail herschreven naar "{footRounds} rondes voet breien" / "In de ronde op alle {sockSts} steken, tot de teen — samen {cm} cm vanaf de hiel." Teen-instructies blijven vervallen (stap 5 blijft weg, zoals eerder gevraagd).
+
 ## 2026-07-12 — Sokmaat cuff-down: voet + teen samengevoegd tot één stap
 Stap 4 (voet) en stap 5 (teen) in de cuff-down-volgorde samengevoegd tot één stap 4, in dezelfde stijl als stap 2 (been): titel toont het totaal aantal rondes, detailtekst splitst uit in de twee onderdelen die samen dat totaal vormen. Losse teen-stap is vervallen; `sokmaat.html` gaat nu van 5 naar 4 stappen voor cuff-down.
 
