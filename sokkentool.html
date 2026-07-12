@@ -12,6 +12,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <script src="version-check.js"></script>
+<script src="common.js"></script>
 </head>
 <body>
   <a class="back-link" href="index.html">
@@ -38,7 +39,7 @@
       <label for="rowGauge">Rows per 10 cm</label>
       <input type="text" inputmode="decimal" id="rowGauge" value="42">
     </div>
-    <input type="hidden" id="circumference" value="21">
+    <input type="hidden" id="circumference">
     <div class="field">
       <label for="ease">Negatieve ease (%)</label>
       <input type="text" inputmode="decimal" id="ease" value="10">
@@ -51,7 +52,7 @@
         <span class="field-pair-sep">×</span>
         <input type="text" inputmode="decimal" id="ribPurl" value="2" aria-label="Aantal purl stitches">
       </div>
-      <p class="field-hint">Knit × purl stitches van de rib, bv. 2x2.</p>
+      <p class="field-hint">Knit × purl stitches van de rib, bv. 2x2. Het cast-on aantal stitches wordt afgerond op de som (hier 4).</p>
     </div>
     <div class="field">
       <label for="euSize">EU-schoenmaat</label>
@@ -74,6 +75,15 @@
     </div>
   </div>
 
+  <div class="result-card glass">
+    <div class="value" id="summarySts">-</div>
+    <div class="label">stitches cast on</div>
+    <div class="rounded-row">
+      <span class="rounded-value" id="summaryCirc">-</span>
+      <span class="rounded-label">effectieve omtrek</span>
+    </div>
+  </div>
+
   <ol class="steps" id="stepsList"></ol>
 
   <button class="scroll-top-btn" id="scrollTopBtn" aria-label="Naar boven">
@@ -92,11 +102,8 @@
   const legLengthInput = document.getElementById('legLength');
   const cuffLengthInput = document.getElementById('cuffLength');
   const stepsList = document.getElementById('stepsList');
-
-  function parseNum(str) {
-    if (!str) return NaN;
-    return parseFloat(str.replace(',', '.'));
-  }
+  const summarySts = document.getElementById('summarySts');
+  const summaryCirc = document.getElementById('summaryCirc');
 
   function roundToMultiple(x, m) {
     return Math.round(x / m) * m;
@@ -104,10 +111,6 @@
 
   function roundToEven(x) {
     return Math.round(x / 2) * 2;
-  }
-
-  function fmt(x) {
-    return x.toFixed(1).replace(/\.0$/, '').replace('.', ',');
   }
 
   // Regia 4-ply maattabel (opzetsteken per EU-schoenmaat, gauge 30 st/10cm), middelpunt van elke maatbrug
@@ -143,14 +146,17 @@
     const ease = parseNum(easeInput.value);
     const ribKnit = parseNum(ribKnitInput.value);
     const ribPurl = parseNum(ribPurlInput.value);
+    const multiple = ribKnit + ribPurl;
     const footLength = parseNum(footLengthInput.value);
     const legLength = parseNum(legLengthInput.value);
     const cuffLength = parseNum(cuffLengthInput.value);
 
     if ([gauge, rowGauge, circumference, ease, ribKnit, ribPurl, footLength, legLength, cuffLength].some(isNaN)
-        || gauge <= 0 || rowGauge <= 0 || circumference <= 0 || ribKnit <= 0 || ribPurl <= 0 || footLength <= 0 || legLength < 0
+        || gauge <= 0 || rowGauge <= 0 || circumference <= 0 || ease >= 100 || ribKnit <= 0 || ribPurl <= 0 || footLength <= 0 || legLength < 0
         || cuffLength < 0 || cuffLength > legLength) {
       stepsList.innerHTML = '<li class="step glass"><span class="step-body"><span class="step-title">Vul alle velden geldig in</span></span></li>';
+      summarySts.textContent = '-';
+      summaryCirc.textContent = '-';
       return;
     }
 
@@ -160,7 +166,7 @@
     // Boord: steken op te zetten
     const effectiveCirc = circumference * (1 - ease / 100);
     const exactSts = effectiveCirc * stPerCm;
-    const sockSts = Math.round(exactSts);
+    const sockSts = roundToMultiple(exactSts, multiple);
 
     // Been: boord (rib) + stockinette
     const legRows = Math.round(legLength * rowPerCm);
@@ -189,11 +195,18 @@
     let html = '';
     html += stepHtml(1, sockSts + ' stitches cast on (cuff)',
       'Long-tail of German twisted cast-on, ' + ribKnit + 'x' + ribPurl + ' rib. Effectieve omtrek: ' + fmt(effectiveCirc) + ' cm.');
-    html += stepHtml(2, legRows + ' rows been breien',
-      cuffRows + ' rows ' + ribKnit + 'x' + ribPurl + ' rib (' + fmt(cuffLength) + ' cm cuff), dan ' + stockinetteRows + ' rows stockinette tot de heel — samen ' + fmt(legLength) + ' cm.');
-    html += stepHtml(3, footRounds + ' rows vanaf einde heel tot toe',
+    html += stepHtml(2, legRows + ' rounds been breien',
+      cuffRows + ' rounds ' + ribKnit + 'x' + ribPurl + ' rib (' + fmt(cuffLength) + ' cm cuff), dan ' + stockinetteRows + ' rounds stockinette tot de heel — samen ' + fmt(legLength) + ' cm.');
+    html += stepHtml(3, heelRows + ' rows German short row heel',
+      'Heen en weer over ' + heelSts + ' stitches (de helft). Eerst turns tot ' + centerSts + ' center stitches overblijven (' + turnsPerSide + ' per kant), dan de turns weer oplossen.');
+    html += stepHtml(4, footRounds + ' rounds vanaf einde heel tot toe',
       'In the round op alle ' + sockSts + ' stitches — ' + fmt(footRounds / rowPerCm) + ' cm vanaf einde heel tot toe (heel: ' + heelRows + ' rows, niet meegerekend).');
+    html += stepHtml(5, toeRounds + ' rounds toe',
+      'Fase 1: 4 stitches minderen om de round, ' + decEventsPhase1 + '× tot ' + phase1Target + ' stitches. Fase 2: elke round minderen, ' + decEventsPhase2 + '× tot ' + finalToeSts + ' stitches. Sluit met Kitchener stitch (grafting).');
     stepsList.innerHTML = html;
+
+    summarySts.textContent = sockSts;
+    summaryCirc.textContent = fmt(effectiveCirc) + ' cm';
   }
 
   function updateCircFromEuSize() {
@@ -245,20 +258,6 @@
 
   updateCircFromEuSize();
   calculate();
-
-  const scrollTopBtn = document.getElementById('scrollTopBtn');
-  window.addEventListener('scroll', () => {
-    scrollTopBtn.classList.toggle('visible', window.scrollY > 300);
-  });
-  scrollTopBtn.addEventListener('click', () => {
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  });
-
-  document.addEventListener('click', (e) => {
-    if (document.activeElement.tagName === 'INPUT' && e.target !== document.activeElement) {
-      document.activeElement.blur();
-    }
-  });
 </script>
 </body>
 </html>

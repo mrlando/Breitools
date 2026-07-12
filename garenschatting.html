@@ -12,6 +12,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <script src="version-check.js"></script>
+<script src="common.js"></script>
 </head>
 <body>
   <a class="back-link" href="index.html">
@@ -44,7 +45,11 @@
 
   <div class="result-card glass">
     <div class="value" id="ballsNeeded">-</div>
-    <div class="label">bollen nodig (incl. 10% buffer)</div>
+    <div class="label">bollen nodig</div>
+    <div class="rounded-row">
+      <span class="rounded-value" id="metersWithBuffer">-</span>
+      <span class="rounded-label">incl. 10% buffer</span>
+    </div>
   </div>
 
   <p class="hint">Koop bij voorkeur <strong>dezelfde dye lot</strong> — kleurverschil tussen batches kan zichtbaar zijn.</p>
@@ -57,41 +62,25 @@
   const metersInput = document.getElementById('metersNeeded');
   const perBallInput = document.getElementById('metersPerBall');
   const output = document.getElementById('ballsNeeded');
-
-  function parseNum(str) {
-    if (!str) return NaN;
-    return parseFloat(str.replace(',', '.'));
-  }
+  const bufferOutput = document.getElementById('metersWithBuffer');
 
   function calculate() {
     const meters = parseNum(metersInput.value);
     const perBall = parseNum(perBallInput.value);
-    if (isNaN(meters) || isNaN(perBall) || perBall <= 0) {
+    if (isNaN(meters) || isNaN(perBall) || meters <= 0 || perBall <= 0) {
       output.textContent = '-';
+      bufferOutput.textContent = '-';
       return;
     }
     const withBuffer = meters * 1.1;
     const balls = Math.ceil(withBuffer / perBall);
     output.textContent = balls;
+    bufferOutput.textContent = Math.ceil(withBuffer) + ' m';
   }
 
   metersInput.addEventListener('input', calculate);
   perBallInput.addEventListener('input', calculate);
   calculate();
-
-  const scrollTopBtn = document.getElementById('scrollTopBtn');
-  window.addEventListener('scroll', () => {
-    scrollTopBtn.classList.toggle('visible', window.scrollY > 300);
-  });
-  scrollTopBtn.addEventListener('click', () => {
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  });
-
-  document.addEventListener('click', (e) => {
-    if (document.activeElement.tagName === 'INPUT' && e.target !== document.activeElement) {
-      document.activeElement.blur();
-    }
-  });
 </script>
 </body>
 </html>

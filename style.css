@@ -152,34 +152,6 @@ input:focus {
 .hint { margin-top: 16px; font-size: 0.85em; opacity: 0.55; text-align: center; line-height: 1.4; }
 .hint strong { color: var(--wool-plum); opacity: 1; }
 
-/* Constructie-toggle (cuff-down / toe-up) */
-.toggle-row {
-  display: flex;
-  gap: 8px;
-  padding: 5px;
-  margin-top: 18px;
-}
-.toggle-btn {
-  flex: 1;
-  border: none;
-  background: transparent;
-  padding: 10px 12px;
-  font-size: 0.88em;
-  font-weight: 700;
-  color: var(--ink);
-  opacity: 0.55;
-  border-radius: 20px;
-  cursor: pointer;
-  transition: transform 0.2s var(--spring), opacity 0.2s ease, background 0.2s ease, color 0.2s ease;
-}
-.toggle-btn:active { transform: scale(0.96); }
-.toggle-btn.active {
-  opacity: 1;
-  color: #fff;
-  background: linear-gradient(145deg, rgba(217,142,148,0.95), rgba(193,105,79,0.95));
-  box-shadow: 0 4px 14px rgba(193,105,79,0.35);
-}
-
 /* Sokrecept: genummerde stappenlijst */
 .steps { list-style: none; padding: 0; margin: 18px 0 0; }
 .steps li + li { margin-top: 12px; }

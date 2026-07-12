@@ -1,6 +1,6 @@
 {
   "name": "Monika's breitools",
-  "short_name": "Monika's breitools",
+  "short_name": "Breitools",
   "start_url": "index.html",
   "scope": ".",
   "display": "standalone",

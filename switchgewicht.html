@@ -12,6 +12,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <script src="version-check.js"></script>
+<script src="common.js"></script>
 </head>
 <body>
   <a class="back-link" href="index.html">
@@ -64,15 +65,10 @@
   const output = document.getElementById('switchWeight');
   const outputRounded = document.getElementById('switchWeightRounded');
 
-  function parseNum(str) {
-    if (!str) return NaN;
-    return parseFloat(str.replace(',', '.'));
-  }
-
   function calculate() {
     const start = parseNum(startInput.value);
     const leftover = parseNum(leftoverInput.value);
-    if (isNaN(start) || isNaN(leftover) || start <= leftover) {
+    if (isNaN(start) || isNaN(leftover) || leftover < 0 || start <= leftover) {
       output.textContent = '-';
       outputRounded.textContent = '-';
       return;
@@ -86,20 +82,6 @@
   startInput.addEventListener('input', calculate);
   leftoverInput.addEventListener('input', calculate);
   calculate();
-
-  const scrollTopBtn = document.getElementById('scrollTopBtn');
-  window.addEventListener('scroll', () => {
-    scrollTopBtn.classList.toggle('visible', window.scrollY > 300);
-  });
-  scrollTopBtn.addEventListener('click', () => {
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  });
-
-  document.addEventListener('click', (e) => {
-    if (document.activeElement.tagName === 'INPUT' && e.target !== document.activeElement) {
-      document.activeElement.blur();
-    }
-  });
 </script>
 </body>
 </html>
