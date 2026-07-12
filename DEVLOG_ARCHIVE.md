@@ -1,6 +1,6 @@
 # DEVLOG archief
 
-Oudere entries, verplaatst uit DEVLOG.md om die compact te houden (~6 entries max).
+Oudere entries, verplaatst uit DEVLOG.md om die compact te houden (~8 entries max).
 
 ## 2026-07-12 — Sokkentool: voetomtrek automatisch geschat via EU-maat (Regia-opzettabel)
 Voetomtrek moest tot nu toe met de hand ingevuld worden (default bleef vaak op 21 staan, ook als dat niet klopte voor de gekozen maat) — gebruiker mat dit zelf nooit, wilde het afleiden uit een echte maattabel. Regia 4-ply's officiële opzetsteken-per-EU-maat-tabel (uit een foto van het garenlabel/patroon) toegevoegd als `SIZE_TABLE` (paren van maatbruggen 22/23 t/m 46/47, lineair geïnterpoleerd tussen middelpunten). Bij het invullen van de EU-maat werd `circumference` berekend: opzetsteken uit de tabel → effectieve omtrek via de eigen gauge-invoer (`sts / (gauge/10)`) → terug naar ruwe voetomtrek via de eigen ease-invoer (`effectiveCirc / (1 - ease/100)`), zodat het resultaat de eigen gauge/ease van de gebruiker blijft respecteren i.p.v. Regia's vaste garen. Geverifieerd: EU 41 → 64 opzetsteken, EU 39 → 60 opzetsteken, beide exact gelijk aan de tabel.
