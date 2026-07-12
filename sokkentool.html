@@ -51,16 +51,16 @@
         <span class="field-pair-sep">×</span>
         <input type="text" inputmode="decimal" id="ribPurl" value="2" aria-label="Aantal purl stitches">
       </div>
-      <p class="field-hint">Knit × purl stitches van de rib, bv. 2x2. Het cast-on aantal stitches wordt afgerond op de som (hier 4).</p>
+      <p class="field-hint">Knit × purl stitches van de rib, bv. 2x2.</p>
     </div>
     <div class="field">
-      <label for="euSize">EU-schoenmaat (optioneel)</label>
-      <input type="text" inputmode="decimal" id="euSize" placeholder="bv. 41">
-      <p class="field-hint">Vult automatisch de voetlengte (vuistregel EU-maat × ⅔ cm − 1,5 cm) én de voetomtrek in (op basis van Regia's cast-on-tabel per maat, omgerekend naar jouw gauge/ease) — zelf opmeten blijft nauwkeuriger.</p>
+      <label for="euSize">EU-schoenmaat</label>
+      <input type="text" inputmode="decimal" id="euSize" value="39">
+      <p class="field-hint">Basis voor de maat: bepaalt de voetlengte (vuistregel EU-maat × ⅔ cm − 1,5 cm) en de voetomtrek (Regia's cast-on-tabel, omgerekend naar jouw gauge/ease). Pas je de voetlengte hieronder handmatig aan, dan wordt de schoenmaat teruggerekend.</p>
     </div>
     <div class="field">
       <label for="footLength">Voetlengte (cm)</label>
-      <input type="text" inputmode="decimal" id="footLength" value="26">
+      <input type="text" inputmode="decimal" id="footLength" value="24,5">
     </div>
     <div class="field">
       <label for="legLength">Beenlengte, cuff tot heel (cm)</label>
@@ -143,7 +143,6 @@
     const ease = parseNum(easeInput.value);
     const ribKnit = parseNum(ribKnitInput.value);
     const ribPurl = parseNum(ribPurlInput.value);
-    const multiple = ribKnit + ribPurl;
     const footLength = parseNum(footLengthInput.value);
     const legLength = parseNum(legLengthInput.value);
     const cuffLength = parseNum(cuffLengthInput.value);
@@ -161,7 +160,7 @@
     // Boord: steken op te zetten
     const effectiveCirc = circumference * (1 - ease / 100);
     const exactSts = effectiveCirc * stPerCm;
-    const sockSts = roundToMultiple(exactSts, multiple);
+    const sockSts = Math.round(exactSts);
 
     // Been: boord (rib) + stockinette
     const legRows = Math.round(legLength * rowPerCm);
@@ -209,18 +208,42 @@
     }
   }
 
+  let syncingSize = false;
+
+  function euSizeToFootLength(euSize) {
+    return euSize * (2 / 3) - 1.5;
+  }
+
+  function footLengthToEuSize(footLength) {
+    return (footLength + 1.5) / (2 / 3);
+  }
+
   euSizeInput.addEventListener('input', () => {
+    if (syncingSize) return;
     const euSize = parseNum(euSizeInput.value);
     if (isNaN(euSize) || euSize <= 0) return;
-    const estimatedLength = euSize * (2 / 3) - 1.5;
-    footLengthInput.value = fmt(estimatedLength);
+    syncingSize = true;
+    footLengthInput.value = fmt(euSizeToFootLength(euSize));
+    syncingSize = false;
     updateCircFromEuSize();
     calculate();
   });
 
-  [gaugeInput, rowGaugeInput, easeInput, ribKnitInput, ribPurlInput, footLengthInput, legLengthInput, cuffLengthInput]
+  footLengthInput.addEventListener('input', () => {
+    if (syncingSize) return;
+    const footLength = parseNum(footLengthInput.value);
+    if (isNaN(footLength) || footLength <= 0) return;
+    syncingSize = true;
+    euSizeInput.value = fmt(footLengthToEuSize(footLength));
+    syncingSize = false;
+    updateCircFromEuSize();
+    calculate();
+  });
+
+  [gaugeInput, rowGaugeInput, easeInput, ribKnitInput, ribPurlInput, legLengthInput, cuffLengthInput]
     .forEach(el => el.addEventListener('input', calculate));
 
+  updateCircFromEuSize();
   calculate();
 
   const scrollTopBtn = document.getElementById('scrollTopBtn');

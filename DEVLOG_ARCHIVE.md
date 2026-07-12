@@ -2,6 +2,9 @@
 
 Oudere entries, verplaatst uit DEVLOG.md om die compact te houden (~6 entries max).
 
+## 2026-07-12 — Sokkentool stap 3 herformuleerd + verouderde subtitel gefixt
+Stap 3-tekst gebruikte "samen" (suggereerde een totaal), terwijl het al alleen het stuk vanaf einde hiel tot teen was — herschreven zonder het woord "samen". Ook de tool-kaart-subtitel op `index.html` was nog blijven hangen op de oude "boord, hiel, voet en teen (cuff-down/toe-up)"-tekst sinds de toe-up-verwijdering — teruggebracht naar dezelfde subtitel als de sokkentool-pagina zelf.
+
 ## 2026-07-12 — App-titel: "Breitools" → "Monika's breitools"
 Hernoemd op alle plekken: `<title>`/`<h1>` in `index.html`, `<title>` van de 3 tool-pagina's, en `name`/`short_name` in `manifest.json` (bepaalt het label onder het "Zet op beginscherm"-icoon).
 
