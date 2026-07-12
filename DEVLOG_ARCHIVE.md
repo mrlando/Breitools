@@ -2,6 +2,9 @@
 
 Oudere entries, verplaatst uit DEVLOG.md om die compact te houden (~6 entries max).
 
+## 2026-07-12 — Sokkentool: toe-up verwijderd, hernoemd naar sokkentool.html
+Volledige toe-up-constructie uit `sokmaat.html` verwijderd (toggle-knoppen, `setConstruction`, toe-up-tak in `calculate()`) — cuff-down is nu de enige constructiemethode. Bestand hernoemd naar `sokkentool.html` (`git mv`), link in `index.html` bijgewerkt.
+
 ## 2026-07-12 — Client-side cache-busting via VERSION-check
 GitHub Pages cachet zelf al maar 10 min (`max-age=600`, niet aanpasbaar op de gratis tier zonder custom headers), maar browser/PWA-cache (vooral "Zet op beginscherm" op iOS) hield pagina's soms langer vast. `version-check.js` toegevoegd: haalt bij elke page load `VERSION` op met `cache: 'no-store'` (paar bytes, verwaarloosbare impact), vergelijkt met `localStorage`, en forceert alleen een verse reload (cache-bustende `?_v=`-query, daarna weer opgeschoond via `history.replaceState`) als de versie écht is veranderd sinds het vorige bezoek. Opgenomen in de `<head>` van alle 5 pagina's.
 

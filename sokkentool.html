@@ -218,12 +218,7 @@
     calculate();
   });
 
-  [gaugeInput, easeInput].forEach(el => el.addEventListener('input', () => {
-    updateCircFromEuSize();
-    calculate();
-  }));
-
-  [rowGaugeInput, ribKnitInput, ribPurlInput, footLengthInput, legLengthInput, cuffLengthInput]
+  [gaugeInput, rowGaugeInput, easeInput, ribKnitInput, ribPurlInput, footLengthInput, legLengthInput, cuffLengthInput]
     .forEach(el => el.addEventListener('input', calculate));
 
   calculate();
