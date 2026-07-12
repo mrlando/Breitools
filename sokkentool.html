@@ -169,8 +169,8 @@
       'Long-tail of German twisted cast-on, ' + ribKnit + 'x' + ribPurl + ' rib. Effectieve omtrek: ' + fmt(effectiveCirc) + ' cm.');
     html += stepHtml(2, legRows + ' rijen been breien',
       cuffRows + ' rijen ' + ribKnit + 'x' + ribPurl + ' rib (' + fmt(cuffLength) + ' cm boord), dan ' + stockinetteRows + ' rijen stockinette tot de hiel — samen ' + fmt(legLength) + ' cm.');
-    html += stepHtml(3, footRounds + ' rows van hiel tot teen',
-      'In de ronde op alle ' + sockSts + ' stitches — samen ' + fmt(footLength - toeLengthCm) + ' cm vanaf de hiel.');
+    html += stepHtml(3, footRounds + ' rows vanaf einde hiel tot teen',
+      'In de ronde op alle ' + sockSts + ' stitches — ' + fmt(footLength - toeLengthCm) + ' cm vanaf einde hiel tot teen.');
     stepsList.innerHTML = html;
   }
 
