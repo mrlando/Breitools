@@ -202,10 +202,8 @@
         cuffRows + ' rijen ' + ribKnit + 'x' + ribPurl + ' rib (' + fmt(cuffLength) + ' cm boord), dan ' + stockinetteRows + ' rijen stockinette tot de hiel — samen ' + fmt(legLength) + ' cm.');
       html += stepHtml(3, 'Hiel: German short row over ' + heelSts + ' steken',
         turnsPerSide + ' korte rijen aan elke kant, ' + centerSts + ' steken blijven in het midden ongewerkt. Geen gusset — daarna gewoon door op alle ' + sockSts + ' steken.');
-      html += stepHtml(4, footRounds + ' rondes voet recht breien',
-        'In de ronde op alle ' + sockSts + ' steken, tot ' + fmt(footLength) + ' cm min de teenlengte (' + fmt(toeLengthCm) + ' cm).');
-      html += stepHtml(5, 'Teen: ' + toeRounds + ' rondes afname',
-        'Fase 1: -4 st om de ronde tot ' + phase1Target + ' st (' + roundsPhase1 + ' rondes). Fase 2: -4 st elke ronde tot ' + finalToeSts + ' st (' + roundsPhase2 + ' rondes). Sluit met kitchener stitch.');
+      html += stepHtml(4, (footRounds + toeRounds) + ' rondes voet en teen breien',
+        footRounds + ' rondes recht op alle ' + sockSts + ' steken, dan de teen: fase 1 -4 st om de ronde tot ' + phase1Target + ' st (' + roundsPhase1 + ' rondes), fase 2 -4 st elke ronde tot ' + finalToeSts + ' st (' + roundsPhase2 + ' rondes) — samen tot ' + fmt(footLength) + ' cm vanaf de hiel. Sluit af met kitchener stitch.');
     } else {
       html += stepHtml(1, toeUpStartSts + ' steken opzetten (teen)',
         "Judy's Magic Cast-on, verdeeld over 2 naalden.");

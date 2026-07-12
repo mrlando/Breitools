@@ -1,5 +1,8 @@
 # DEVLOG
 
+## 2026-07-12 — Sokmaat cuff-down: voet + teen samengevoegd tot één stap
+Stap 4 (voet) en stap 5 (teen) in de cuff-down-volgorde samengevoegd tot één stap 4, in dezelfde stijl als stap 2 (been): titel toont het totaal aantal rondes, detailtekst splitst uit in de twee onderdelen die samen dat totaal vormen. Losse teen-stap is vervallen; `sokmaat.html` gaat nu van 5 naar 4 stappen voor cuff-down.
+
 ## 2026-07-12 — Client-side cache-busting via VERSION-check
 GitHub Pages cachet zelf al maar 10 min (`max-age=600`, niet aanpasbaar op de gratis tier zonder custom headers), maar browser/PWA-cache (vooral "Zet op beginscherm" op iOS) hield pagina's soms langer vast. `version-check.js` toegevoegd: haalt bij elke page load `VERSION` op met `cache: 'no-store'` (paar bytes, verwaarloosbare impact), vergelijkt met `localStorage`, en forceert alleen een verse reload (cache-bustende `?_v=`-query, daarna weer opgeschoond via `history.replaceState`) als de versie écht is veranderd sinds het vorige bezoek. Opgenomen in de `<head>` van alle 5 pagina's.
 
