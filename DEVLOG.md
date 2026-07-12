@@ -1,5 +1,8 @@
 # DEVLOG
 
+## 2026-07-12 — Fix: toetsenbord bleef staan na invoer (geen "klaar"-toets)
+`inputmode="decimal"` toont op iOS een numeriek toetsenbord zonder return/klaar-toets, dus het toetsenbord bleef in beeld tot je handmatig een ander veld aantikte. Klik-buiten-invoerveld sluit het toetsenbord nu automatisch: `document`-click-listener die het actieve `INPUT` blurt zodra er buiten dat veld geklikt wordt. Toegevoegd aan `sokmaat.html`, `switchgewicht.html`, `garenschatting.html`.
+
 ## 2026-07-12 — Fix: EU-placeholder kwam niet overeen met default cm-waarde
 Placeholder `bv. 39` in het EU-schoenmaat-veld hoorde niet bij de bestaande default van `26` cm in het voetlengte-veld (39 → 24,5 cm via de vuistregel). Placeholder aangepast naar `bv. 41` (→ 25,8 cm, sluit aan bij de 26 cm default) in `sokmaat.html`.
 

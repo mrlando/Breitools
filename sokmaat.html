@@ -243,6 +243,12 @@
   scrollTopBtn.addEventListener('click', () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   });
+
+  document.addEventListener('click', (e) => {
+    if (document.activeElement.tagName === 'INPUT' && e.target !== document.activeElement) {
+      document.activeElement.blur();
+    }
+  });
 </script>
 </body>
 </html>
