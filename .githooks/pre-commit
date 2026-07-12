@@ -1,0 +1,13 @@
+#!/bin/bash
+# Hoogt VERSION en het buildnummer in index.html automatisch op bij elke commit.
+set -e
+
+cd "$(git rev-parse --show-toplevel)"
+
+current=$(cat VERSION 2>/dev/null || echo 0)
+next=$((current + 1))
+
+echo "$next" > VERSION
+sed -i '' "s/id=\"buildVersion\">[0-9]*</id=\"buildVersion\">${next}</" index.html
+
+git add VERSION index.html

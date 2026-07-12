@@ -1,5 +1,9 @@
 # DEVLOG
 
+## 2026-07-12 — Buildnummer op startscherm + responsive layout voor iPad/landscape
+Onopvallend versienummer (`v<span id="buildVersion">`) onderaan `index.html`, opgehaald uit `VERSION`. Wordt automatisch opgehoogd via een git pre-commit hook (`.githooks/pre-commit`, geactiveerd met `git config core.hooksPath .githooks`) die bij elke commit `VERSION` +1 doet en het cijfer in `index.html` bijwerkt — dus geen handmatige stap nodig bij toekomstige deploys.
+Daarnaast een `@media (min-width: 700px)` block in `style.css` toegevoegd: de vaste 420px-kolom (bedoeld voor iPhone-portrait) wordt op iPad/landscape 640px breed met iets grotere iconen/padding/tekst, in plaats van een smal kolommetje midden op een groot scherm.
+
 ## 2026-07-12 — Fix: toetsenbord bleef staan na invoer (geen "klaar"-toets)
 `inputmode="decimal"` toont op iOS een numeriek toetsenbord zonder return/klaar-toets, dus het toetsenbord bleef in beeld tot je handmatig een ander veld aantikte. Klik-buiten-invoerveld sluit het toetsenbord nu automatisch: `document`-click-listener die het actieve `INPUT` blurt zodra er buiten dat veld geklikt wordt. Toegevoegd aan `sokmaat.html`, `switchgewicht.html`, `garenschatting.html`.
 
