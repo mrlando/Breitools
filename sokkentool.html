@@ -26,53 +26,49 @@
       </svg>
     </div>
     <h1>Sokkenpatroon</h1>
-    <p class="sub">Volledig recept: boord tot teen (German short row hiel)</p>
+    <p class="sub">Volledig recept: cuff tot toe (German short row heel)</p>
   </div>
 
   <div class="card glass">
     <div class="field">
-      <label for="gauge">Steken per 10 cm (gauge)</label>
+      <label for="gauge">Stitches per 10 cm (gauge)</label>
       <input type="text" inputmode="decimal" id="gauge" value="30">
     </div>
     <div class="field">
-      <label for="rowGauge">Rijen per 10 cm</label>
+      <label for="rowGauge">Rows per 10 cm</label>
       <input type="text" inputmode="decimal" id="rowGauge" value="42">
     </div>
-    <div class="field">
-      <label for="circumference">Voetomtrek (cm)</label>
-      <input type="text" inputmode="decimal" id="circumference" value="21">
-      <p class="field-hint">Wordt automatisch geschat als je een EU-schoenmaat invult — zelf opmeten is nauwkeuriger.</p>
-    </div>
+    <input type="hidden" id="circumference" value="21">
     <div class="field">
       <label for="ease">Negatieve ease (%)</label>
       <input type="text" inputmode="decimal" id="ease" value="10">
       <p class="field-hint">Hoeveel kleiner de sok is dan je voetomtrek, zodat de rekbare stof strak genoeg zit.</p>
     </div>
     <div class="field">
-      <label>Ribpatroon (boord)</label>
+      <label>Ribpatroon (cuff)</label>
       <div class="field-pair">
-        <input type="text" inputmode="decimal" id="ribKnit" value="2" aria-label="Aantal rechte steken">
+        <input type="text" inputmode="decimal" id="ribKnit" value="2" aria-label="Aantal knit stitches">
         <span class="field-pair-sep">×</span>
-        <input type="text" inputmode="decimal" id="ribPurl" value="2" aria-label="Aantal averechte steken">
+        <input type="text" inputmode="decimal" id="ribPurl" value="2" aria-label="Aantal purl stitches">
       </div>
-      <p class="field-hint">Recht × averecht steken van de rib, bv. 2x2. Het opgezette aantal steken wordt afgerond op de som (hier 4).</p>
+      <p class="field-hint">Knit × purl stitches van de rib, bv. 2x2. Het cast-on aantal stitches wordt afgerond op de som (hier 4).</p>
     </div>
     <div class="field">
       <label for="euSize">EU-schoenmaat (optioneel)</label>
       <input type="text" inputmode="decimal" id="euSize" placeholder="bv. 41">
-      <p class="field-hint">Vult automatisch de voetlengte (vuistregel EU-maat × ⅔ cm − 1,5 cm) én de voetomtrek in (op basis van Regia's opzet-tabel per maat, omgerekend naar jouw gauge/ease) — zelf opmeten blijft nauwkeuriger.</p>
+      <p class="field-hint">Vult automatisch de voetlengte (vuistregel EU-maat × ⅔ cm − 1,5 cm) én de voetomtrek in (op basis van Regia's cast-on-tabel per maat, omgerekend naar jouw gauge/ease) — zelf opmeten blijft nauwkeuriger.</p>
     </div>
     <div class="field">
       <label for="footLength">Voetlengte (cm)</label>
       <input type="text" inputmode="decimal" id="footLength" value="26">
     </div>
     <div class="field">
-      <label for="legLength">Beenlengte, boord tot hiel (cm)</label>
+      <label for="legLength">Beenlengte, cuff tot heel (cm)</label>
       <input type="text" inputmode="decimal" id="legLength" value="15">
-      <p class="field-hint">Totale lengte inclusief de boord zelf — niet erbovenop optellen.</p>
+      <p class="field-hint">Totale lengte inclusief de cuff zelf — niet erbovenop optellen.</p>
     </div>
     <div class="field">
-      <label for="cuffLength">Boordlengte (cm)</label>
+      <label for="cuffLength">Cufflengte (cm)</label>
       <input type="text" inputmode="decimal" id="cuffLength" value="4">
       <p class="field-hint">Hoeveel van de beenlengte in rib gebreid wordt (bv. 4 cm); de rest is stockinette.</p>
     </div>
@@ -192,21 +188,18 @@
     const footRounds = Math.max(totalFootRows - heelRows - toeRounds, 0);
 
     let html = '';
-    html += stepHtml(1, sockSts + ' steken opzetten (boord)',
+    html += stepHtml(1, sockSts + ' stitches cast on (cuff)',
       'Long-tail of German twisted cast-on, ' + ribKnit + 'x' + ribPurl + ' rib. Effectieve omtrek: ' + fmt(effectiveCirc) + ' cm.');
-    html += stepHtml(2, legRows + ' rijen been breien',
-      cuffRows + ' rijen ' + ribKnit + 'x' + ribPurl + ' rib (' + fmt(cuffLength) + ' cm boord), dan ' + stockinetteRows + ' rijen stockinette tot de hiel — samen ' + fmt(legLength) + ' cm.');
-    html += stepHtml(3, footRounds + ' rows vanaf einde hiel tot teen',
-      'In de ronde op alle ' + sockSts + ' stitches — ' + fmt(footRounds / rowPerCm) + ' cm vanaf einde hiel tot teen (hiel: ' + heelRows + ' rows, niet meegerekend).');
+    html += stepHtml(2, legRows + ' rows been breien',
+      cuffRows + ' rows ' + ribKnit + 'x' + ribPurl + ' rib (' + fmt(cuffLength) + ' cm cuff), dan ' + stockinetteRows + ' rows stockinette tot de heel — samen ' + fmt(legLength) + ' cm.');
+    html += stepHtml(3, footRounds + ' rows vanaf einde heel tot toe',
+      'In the round op alle ' + sockSts + ' stitches — ' + fmt(footRounds / rowPerCm) + ' cm vanaf einde heel tot toe (heel: ' + heelRows + ' rows, niet meegerekend).');
     stepsList.innerHTML = html;
   }
 
-  euSizeInput.addEventListener('input', () => {
+  function updateCircFromEuSize() {
     const euSize = parseNum(euSizeInput.value);
     if (isNaN(euSize) || euSize <= 0) return;
-    const estimatedLength = euSize * (2 / 3) - 1.5;
-    footLengthInput.value = fmt(estimatedLength);
-
     const gauge = parseNum(gaugeInput.value);
     const ease = parseNum(easeInput.value);
     if (!isNaN(gauge) && gauge > 0 && !isNaN(ease) && ease < 100) {
@@ -214,10 +207,23 @@
       const effectiveCirc = castOnSts / (gauge / 10);
       circInput.value = fmt(effectiveCirc / (1 - ease / 100));
     }
+  }
+
+  euSizeInput.addEventListener('input', () => {
+    const euSize = parseNum(euSizeInput.value);
+    if (isNaN(euSize) || euSize <= 0) return;
+    const estimatedLength = euSize * (2 / 3) - 1.5;
+    footLengthInput.value = fmt(estimatedLength);
+    updateCircFromEuSize();
     calculate();
   });
 
-  [gaugeInput, rowGaugeInput, circInput, easeInput, ribKnitInput, ribPurlInput, footLengthInput, legLengthInput, cuffLengthInput]
+  [gaugeInput, easeInput].forEach(el => el.addEventListener('input', () => {
+    updateCircFromEuSize();
+    calculate();
+  }));
+
+  [rowGaugeInput, ribKnitInput, ribPurlInput, footLengthInput, legLengthInput, cuffLengthInput]
     .forEach(el => el.addEventListener('input', calculate));
 
   calculate();
