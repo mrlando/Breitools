@@ -41,6 +41,11 @@
       <label for="metersPerBall">Meters per bol</label>
       <input type="text" inputmode="decimal" id="metersPerBall" value="180">
     </div>
+    <div class="field">
+      <label for="buffer">Buffer (%)</label>
+      <input type="text" inputmode="decimal" id="buffer" value="10">
+      <p class="field-hint">Extra marge voor gauge swatch, foutjes en verschil in spanning. Bij grote projecten (veel bollen) kan een kleiner percentage vaak al genoeg zijn.</p>
+    </div>
   </div>
 
   <div class="result-card glass">
@@ -48,7 +53,7 @@
     <div class="label">bollen nodig</div>
     <div class="rounded-row">
       <span class="rounded-value" id="metersWithBuffer">-</span>
-      <span class="rounded-label">incl. 10% buffer</span>
+      <span class="rounded-label" id="bufferLabel">incl. 10% buffer</span>
     </div>
   </div>
 
@@ -61,25 +66,30 @@
 <script>
   const metersInput = document.getElementById('metersNeeded');
   const perBallInput = document.getElementById('metersPerBall');
+  const bufferInput = document.getElementById('buffer');
   const output = document.getElementById('ballsNeeded');
   const bufferOutput = document.getElementById('metersWithBuffer');
+  const bufferLabel = document.getElementById('bufferLabel');
 
   function calculate() {
     const meters = parseNum(metersInput.value);
     const perBall = parseNum(perBallInput.value);
-    if (isNaN(meters) || isNaN(perBall) || meters <= 0 || perBall <= 0) {
+    const buffer = parseNum(bufferInput.value);
+    if (isNaN(meters) || isNaN(perBall) || isNaN(buffer) || meters <= 0 || perBall <= 0 || buffer < 0) {
       output.textContent = '-';
       bufferOutput.textContent = '-';
       return;
     }
-    const withBuffer = meters * 1.1;
+    const withBuffer = meters * (1 + buffer / 100);
     const balls = Math.ceil(withBuffer / perBall);
     output.textContent = balls;
     bufferOutput.textContent = Math.ceil(withBuffer) + ' m';
+    bufferLabel.textContent = 'incl. ' + fmt(buffer) + '% buffer';
   }
 
   metersInput.addEventListener('input', calculate);
   perBallInput.addEventListener('input', calculate);
+  bufferInput.addEventListener('input', calculate);
   calculate();
 </script>
 </body>

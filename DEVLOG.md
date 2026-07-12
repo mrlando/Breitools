@@ -2,6 +2,9 @@
 
 (oudere entries: zie DEVLOG_ARCHIVE.md)
 
+## 2026-07-12 — Garenschatting: buffer instelbaar + rose vlakken donkerder voor leesbaarheid
+Buffer stond vast op 10%, niet ideaal voor grote projecten (bv. 10 bollen) waar dat een grote overschatting geeft. Nieuw veld `buffer` (%) toegevoegd met default 10, gebruikt in `calculate()` i.p.v. de hardcoded `* 1.1`; validatie weigert negatieve waardes. Label onder de resultaatkaart toont nu dynamisch "incl. X% buffer". Daarnaast: het rose vlak van `.result-card` en `.step` had een felle witte highlight linksboven (`radial-gradient` op 10% 5%) die de tekst daar minder leesbaar maakte — highlight-opacity verlaagd (0.4→0.18 en 0.25→0.1) en de gradient zelf donkerder gemaakt (terracotta→plum i.p.v. rose→terracotta) voor meer contrast met de witte tekst. Geverifieerd: buffer 5% → 7 bollen/1260m, negatieve buffer geeft "-", screenshots bevestigen betere leesbaarheid linksboven op zowel garenschatting als sokkentool.
+
 ## 2026-07-12 — DEVLOG-cap naar 8 entries; sokkentool-stappen rose gestyled
 DEVLOG.md-cap opgehoogd van ~6 naar ~8 entries (was te krap om snel terug te kijken naar recente beslissingen, archief blijft altijd doorzoekbaar). Daarnaast `.step` in `style.css` van neutraal glas naar dezelfde rose/terracotta gradient als de eerder verwijderde `.result-card` — genummerde cirkel (`.step-num`) nu een subtiele witte cirkel op die achtergrond i.p.v. eigen gradient, tekst wit met hogere opacity voor leesbaarheid. Geverifieerd in browser: geen console-fouten, stappen tonen correct in rose.
 

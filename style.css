@@ -122,9 +122,9 @@ input:focus {
   padding: 28px 22px;
   margin-top: 18px;
   background:
-    radial-gradient(circle at 10% 5%, rgba(255,255,255,0.4), rgba(255,255,255,0) 45%),
-    linear-gradient(180deg, rgba(255,255,255,0.25) 0%, rgba(255,255,255,0) 45%),
-    linear-gradient(145deg, rgba(217,142,148,0.88), rgba(193,105,79,0.88));
+    radial-gradient(circle at 10% 5%, rgba(255,255,255,0.18), rgba(255,255,255,0) 45%),
+    linear-gradient(180deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0) 45%),
+    linear-gradient(145deg, rgba(193,105,79,0.94), rgba(124,92,107,0.94));
   border-color: rgba(255,255,255,0.5);
   box-shadow:
     0 12px 36px rgba(193,105,79,0.35),
@@ -160,9 +160,9 @@ input:focus {
   gap: 14px;
   padding: 16px 18px;
   background:
-    radial-gradient(circle at 10% 5%, rgba(255,255,255,0.4), rgba(255,255,255,0) 45%),
-    linear-gradient(180deg, rgba(255,255,255,0.25) 0%, rgba(255,255,255,0) 45%),
-    linear-gradient(145deg, rgba(217,142,148,0.88), rgba(193,105,79,0.88));
+    radial-gradient(circle at 10% 5%, rgba(255,255,255,0.18), rgba(255,255,255,0) 45%),
+    linear-gradient(180deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0) 45%),
+    linear-gradient(145deg, rgba(193,105,79,0.94), rgba(124,92,107,0.94));
   border-color: rgba(255,255,255,0.5);
   box-shadow:
     0 12px 36px rgba(193,105,79,0.35),
