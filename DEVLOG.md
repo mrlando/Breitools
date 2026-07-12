@@ -1,5 +1,8 @@
 # DEVLOG
 
+## 2026-07-12 — Sokkentool stap 3: hiel-rows werden niet afgetrokken van het voet-aantal
+`footRounds` was berekend als `voetlengte − teenlengte`, zonder rekening te houden met de hiel: de German short row hiel-turn kost zelf ook rows (hiel-diepte), maar die zaten nog steeds in het getoonde rows/cm-aantal voor het rechte voetstuk. Hiel-berekening (`heelSts`/`centerSts`/`turnsPerSide`, eerder verwijderd toen de losse hiel-stap wegviel) teruggezet — nu puur intern gebruikt om `heelRows` (turnsPerSide × 2) te bepalen en af te trekken: `footRounds = totalFootRows − heelRows − toeRounds`. Stap 3 toont nu expliciet "(hiel: {heelRows} rows, niet meegerekend)" zodat duidelijk is dat dat aantal al is uitgesloten.
+
 ## 2026-07-12 — Sokkentool stap 3 herformuleerd + verouderde subtitel gefixt
 Stap 3-tekst gebruikte "samen" (suggereerde een totaal), terwijl het al alleen het stuk vanaf einde hiel tot teen was — herschreven naar "{footRounds} rows vanaf einde hiel tot teen" / "{cm} cm vanaf einde hiel tot teen" zonder het woord "samen". Ook de tool-kaart-subtitel op `index.html` was nog blijven hangen op de oude "boord, hiel, voet en teen (cuff-down/toe-up)"-tekst sinds de toe-up-verwijdering — teruggebracht naar "Volledig recept: boord tot teen (German short row hiel)", gelijk aan de subtitel op de sokkentool-pagina zelf.
 

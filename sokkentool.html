@@ -151,6 +151,12 @@
     const cuffRows = Math.round(cuffLength * rowPerCm);
     const stockinetteRows = Math.max(legRows - cuffRows, 0);
 
+    // Hiel (German short row, geen gusset): werkt over de helft van de steken
+    const heelSts = roundToEven(sockSts / 2);
+    const centerSts = roundToEven(heelSts / 3);
+    const turnsPerSide = Math.round((heelSts - centerSts) / 2);
+    const heelRows = turnsPerSide * 2;
+
     // Teen: fase 1 -4 st/2 rondes tot 50%, fase 2 -4 st/ronde tot 8-12 st
     const finalToeSts = sockSts >= 40 ? 12 : 8;
     const phase1Target = Math.max(roundToMultiple(sockSts / 2, 4), finalToeSts + 8);
@@ -159,10 +165,10 @@
     const decEventsPhase2 = Math.round((phase1Target - finalToeSts) / 4);
     const roundsPhase2 = decEventsPhase2;
     const toeRounds = roundsPhase1 + roundsPhase2;
-    const toeLengthCm = toeRounds / rowPerCm;
 
-    // Voet: recht stuk tussen hiel/teen-start en teen
-    const footRounds = Math.max(Math.round((footLength - toeLengthCm) * rowPerCm), 0);
+    // Voet: recht stuk tussen hiel-turn en teen, dus voetlengte min hiel-diepte min teenlengte
+    const totalFootRows = Math.round(footLength * rowPerCm);
+    const footRounds = Math.max(totalFootRows - heelRows - toeRounds, 0);
 
     let html = '';
     html += stepHtml(1, sockSts + ' steken opzetten (boord)',
@@ -170,7 +176,7 @@
     html += stepHtml(2, legRows + ' rijen been breien',
       cuffRows + ' rijen ' + ribKnit + 'x' + ribPurl + ' rib (' + fmt(cuffLength) + ' cm boord), dan ' + stockinetteRows + ' rijen stockinette tot de hiel — samen ' + fmt(legLength) + ' cm.');
     html += stepHtml(3, footRounds + ' rows vanaf einde hiel tot teen',
-      'In de ronde op alle ' + sockSts + ' stitches — ' + fmt(footLength - toeLengthCm) + ' cm vanaf einde hiel tot teen.');
+      'In de ronde op alle ' + sockSts + ' stitches — ' + fmt(footRounds / rowPerCm) + ' cm vanaf einde hiel tot teen (hiel: ' + heelRows + ' rows, niet meegerekend).');
     stepsList.innerHTML = html;
   }
 
