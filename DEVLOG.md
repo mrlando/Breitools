@@ -1,5 +1,8 @@
 # DEVLOG
 
+## 2026-07-12 — Sokkentool: toe-up verwijderd, hernoemd naar sokkentool.html
+Volledige toe-up-constructie uit `sokmaat.html` verwijderd (toggle-knoppen, `setConstruction`, toe-up-tak in `calculate()`, en de daaraan gekoppelde variabelen `heelSts`/`centerSts`/`turnsPerSide`/`toeUpStartSts`) — cuff-down is nu de enige constructiemethode. Rondes/steken-teksten in stap 3 herschreven naar rows/stitches, stap 3 (hiel) is eerder al vervallen. Hint-zin over de German short row hiel onderaan verwijderd (verwees naar een hiel-stap die niet meer bestaat). Bestand hernoemd naar `sokkentool.html` (`git mv`), link in `index.html` bijgewerkt.
+
 ## 2026-07-12 — Sokmaat cuff-down: stap 4 teruggebracht tot alleen voet-rondes
 Vorige samenvoeging van voet+teen in stap 4 bleek niet de bedoeling — stap 4 moet alleen de rondes van na de hiel tot de teen tonen (net als stap 2 z'n been-rondes toont), zonder de teen-afname erin. Titel/detail herschreven naar "{footRounds} rondes voet breien" / "In de ronde op alle {sockSts} steken, tot de teen — samen {cm} cm vanaf de hiel." Teen-instructies blijven vervallen (stap 5 blijft weg, zoals eerder gevraagd).
 

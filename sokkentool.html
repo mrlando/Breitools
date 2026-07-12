@@ -29,11 +29,6 @@
     <p class="sub">Volledig recept: boord tot teen (German short row hiel)</p>
   </div>
 
-  <div class="toggle-row">
-    <button type="button" class="toggle-btn active" id="btnCuffDown">Cuff-down</button>
-    <button type="button" class="toggle-btn" id="btnToeUp">Toe-up</button>
-  </div>
-
   <div class="card glass">
     <div class="field">
       <label for="gauge">Steken per 10 cm (gauge)</label>
@@ -71,7 +66,7 @@
       <input type="text" inputmode="decimal" id="footLength" value="26">
     </div>
     <div class="field">
-      <label for="legLength" id="legLengthLabel">Beenlengte, boord tot hiel (cm)</label>
+      <label for="legLength">Beenlengte, boord tot hiel (cm)</label>
       <input type="text" inputmode="decimal" id="legLength" value="15">
       <p class="field-hint">Totale lengte inclusief de boord zelf — niet erbovenop optellen.</p>
     </div>
@@ -88,8 +83,6 @@
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5"/><path d="m5 12 7-7 7 7"/></svg>
   </button>
 
-  <p class="hint">De German short row hiel gebruikt geen gusset — je werkt gewoon door op alle steken zodra de hiel klaar is.</p>
-
 <script>
   const gaugeInput = document.getElementById('gauge');
   const rowGaugeInput = document.getElementById('rowGauge');
@@ -100,13 +93,8 @@
   const euSizeInput = document.getElementById('euSize');
   const footLengthInput = document.getElementById('footLength');
   const legLengthInput = document.getElementById('legLength');
-  const legLengthLabel = document.getElementById('legLengthLabel');
   const cuffLengthInput = document.getElementById('cuffLength');
   const stepsList = document.getElementById('stepsList');
-  const btnCuffDown = document.getElementById('btnCuffDown');
-  const btnToeUp = document.getElementById('btnToeUp');
-
-  let construction = 'cuffdown';
 
   function parseNum(str) {
     if (!str) return NaN;
@@ -123,16 +111,6 @@
 
   function fmt(x) {
     return x.toFixed(1).replace(/\.0$/, '').replace('.', ',');
-  }
-
-  function setConstruction(value) {
-    construction = value;
-    btnCuffDown.classList.toggle('active', value === 'cuffdown');
-    btnToeUp.classList.toggle('active', value === 'toeup');
-    legLengthLabel.textContent = value === 'cuffdown'
-      ? 'Beenlengte, boord tot hiel (cm)'
-      : 'Beenlengte, hiel tot boord (cm)';
-    calculate();
   }
 
   function stepHtml(num, title, detail) {
@@ -173,11 +151,6 @@
     const cuffRows = Math.round(cuffLength * rowPerCm);
     const stockinetteRows = Math.max(legRows - cuffRows, 0);
 
-    // Hiel (German short row, geen gusset): werkt over de helft van de steken
-    const heelSts = roundToEven(sockSts / 2);
-    const centerSts = roundToEven(heelSts / 3);
-    const turnsPerSide = Math.round((heelSts - centerSts) / 2);
-
     // Teen: fase 1 -4 st/2 rondes tot 50%, fase 2 -4 st/ronde tot 8-12 st
     const finalToeSts = sockSts >= 40 ? 12 : 8;
     const phase1Target = Math.max(roundToMultiple(sockSts / 2, 4), finalToeSts + 8);
@@ -191,31 +164,13 @@
     // Voet: recht stuk tussen hiel/teen-start en teen
     const footRounds = Math.max(Math.round((footLength - toeLengthCm) * rowPerCm), 0);
 
-    // Toe-up: startaantal voor Judy's Magic CO en toename-rondes (spiegelbeeld van de afname)
-    const toeUpStartSts = Math.max(roundToEven(finalToeSts), 8);
-
     let html = '';
-    if (construction === 'cuffdown') {
-      html += stepHtml(1, sockSts + ' steken opzetten (boord)',
-        'Long-tail of German twisted cast-on, ' + ribKnit + 'x' + ribPurl + ' rib. Effectieve omtrek: ' + fmt(effectiveCirc) + ' cm.');
-      html += stepHtml(2, legRows + ' rijen been breien',
-        cuffRows + ' rijen ' + ribKnit + 'x' + ribPurl + ' rib (' + fmt(cuffLength) + ' cm boord), dan ' + stockinetteRows + ' rijen stockinette tot de hiel — samen ' + fmt(legLength) + ' cm.');
-      html += stepHtml(3, 'Hiel: German short row over ' + heelSts + ' steken',
-        turnsPerSide + ' korte rijen aan elke kant, ' + centerSts + ' steken blijven in het midden ongewerkt. Geen gusset — daarna gewoon door op alle ' + sockSts + ' steken.');
-      html += stepHtml(4, footRounds + ' rondes voet breien',
-        'In de ronde op alle ' + sockSts + ' steken, tot de teen — samen ' + fmt(footLength - toeLengthCm) + ' cm vanaf de hiel.');
-    } else {
-      html += stepHtml(1, toeUpStartSts + ' steken opzetten (teen)',
-        "Judy's Magic Cast-on, verdeeld over 2 naalden.");
-      html += stepHtml(2, 'Teen: ' + toeRounds + ' rondes toename tot ' + sockSts + ' steken',
-        'Spiegelbeeld van de afname: +4 st elke ronde tot ' + phase1Target + ' st, dan +4 st om de ronde tot ' + sockSts + ' st.');
-      html += stepHtml(3, footRounds + ' rondes voet recht breien',
-        'In de ronde op alle ' + sockSts + ' steken, tot ' + fmt(footLength) + ' cm min de teenlengte (' + fmt(toeLengthCm) + ' cm).');
-      html += stepHtml(4, 'Hiel: German short row over ' + heelSts + ' steken',
-        turnsPerSide + ' korte rijen aan elke kant, ' + centerSts + ' steken blijven in het midden ongewerkt. Geen gusset — daarna gewoon door op alle ' + sockSts + ' steken.');
-      html += stepHtml(5, legRows + ' rijen been breien tot boord',
-        stockinetteRows + ' rijen stockinette, dan ' + cuffRows + ' rijen ' + ribKnit + 'x' + ribPurl + ' rib (' + fmt(cuffLength) + ' cm boord) — samen ' + fmt(legLength) + ' cm. Sluit af met een rekbare afkanting (bv. tubular of sewn bind-off).');
-    }
+    html += stepHtml(1, sockSts + ' steken opzetten (boord)',
+      'Long-tail of German twisted cast-on, ' + ribKnit + 'x' + ribPurl + ' rib. Effectieve omtrek: ' + fmt(effectiveCirc) + ' cm.');
+    html += stepHtml(2, legRows + ' rijen been breien',
+      cuffRows + ' rijen ' + ribKnit + 'x' + ribPurl + ' rib (' + fmt(cuffLength) + ' cm boord), dan ' + stockinetteRows + ' rijen stockinette tot de hiel — samen ' + fmt(legLength) + ' cm.');
+    html += stepHtml(3, footRounds + ' rows van hiel tot teen',
+      'In de ronde op alle ' + sockSts + ' stitches — samen ' + fmt(footLength - toeLengthCm) + ' cm vanaf de hiel.');
     stepsList.innerHTML = html;
   }
 
@@ -226,9 +181,6 @@
     footLengthInput.value = fmt(estimatedLength);
     calculate();
   });
-
-  btnCuffDown.addEventListener('click', () => setConstruction('cuffdown'));
-  btnToeUp.addEventListener('click', () => setConstruction('toeup'));
 
   [gaugeInput, rowGaugeInput, circInput, easeInput, ribKnitInput, ribPurlInput, footLengthInput, legLengthInput, cuffLengthInput]
     .forEach(el => el.addEventListener('input', calculate));
