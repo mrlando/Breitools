@@ -1,5 +1,8 @@
 # DEVLOG
 
+## 2026-07-12 — Fix: EU-placeholder kwam niet overeen met default cm-waarde
+Placeholder `bv. 39` in het EU-schoenmaat-veld hoorde niet bij de bestaande default van `26` cm in het voetlengte-veld (39 → 24,5 cm via de vuistregel). Placeholder aangepast naar `bv. 41` (→ 25,8 cm, sluit aan bij de 26 cm default) in `sokmaat.html`.
+
 ## 2026-07-12 — Fix: EU-schoenmaat → voetlengte vuistregel klopte niet
 `EU × ⅔ cm` (zonder correctie) overschatte de voetlengte structureel met 1,0–1,4 cm t.o.v. de Ziengs-maattabellen (ziengs.nl/maatwijzer) — ⅔ is wel de juiste Franse-schoenmaat-factor, maar mist de teenspeling-marge die in een schoenleest zit. Formule in `sokmaat.html` aangepast naar `EU × ⅔ cm − 1,5 cm`, brengt de afwijking terug naar ±0,6 cm over het hele volwassen bereik (EU 36–50). Field-hint tekst bijgewerkt.
 
