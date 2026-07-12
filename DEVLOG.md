@@ -2,6 +2,9 @@
 
 (oudere entries: zie DEVLOG_ARCHIVE.md)
 
+## 2026-07-12 — Sokkentool: heel/toe-stappen en samenvattingskaart weer weg
+Correctie op de vorige entry: de heel- en teen-stappen (3 en 5) en de rose samenvattingskaart waren bewust weggehaald in een eerdere sessie — gebruiker doet die twee onderdelen vanzelf, zonder stap-voor-stap-instructie nodig. Teruggezet naar 3 stappen (cast on, been, voet); interne heel/teen-berekeningen (`heelSts`, `centerSts`, `turnsPerSide`, `toeRounds` e.d.) blijven bestaan omdat `footRounds` ze nog nodig heeft om af te trekken, maar worden niet meer getoond.
+
 ## 2026-07-12 — App-brede review: rib-afronding terug + alle gevonden punten gefixt
 Rib-afronding van het cast-on aantal (op som van knit+purl) op verzoek teruggezet (was in v14 verwijderd); de EU↔voetlengte-koppeling uit v14 blijft. Daarnaast alle punten uit de app-review: (1) index-kaart Sokkenpatroon nu ook Engelse termen ("cuff tot toe … heel"); (2) ease ≥ 100% is nu ongeldig i.p.v. 0/negatieve stitches; (3) garenschatting weigert meters ≤ 0 en toont meters incl. 10% buffer als extra regel; (4) switchgewicht weigert negatief restgewicht; (5) rounds i.p.v. rows voor alles wat in the round gebreid wordt (been/voet/toe), heel blijft rows (heen-en-weer); (6) heel- en toe-stappen toegevoegd aan het recept (nu 5 stappen, getallen werden al intern berekend); (7) samenvattingskaart (stitches + effectieve omtrek) boven de stappen; (8) gedupliceerde JS (parseNum/fmt/scroll-top/toetsenbord-blur) naar nieuw `common.js`; (9) ongebruikt `opties.html` verwijderd; (10) dode `.toggle-row`/`.toggle-btn` CSS weg; (11) manifest `short_name` → "Breitools" (paste niet onder homescreen-icoon); (12) stale `value="21"` van verborgen circumference-veld weg. Geverifieerd: EU 39 → 60 stitches (veelvoud 4), EU 41 met ease 15% → 60 i.p.v. 64 (ease werkt), sync beide kanten intact, geen console-fouten op alle pagina's.
 
@@ -18,8 +21,5 @@ Kanttekening: onbevestigd of Regia's tabel zelf al met ~10% negatieve ease reken
 
 ## 2026-07-12 — Sokkentool: breitermen naar Engels + voetomtrek-veld weg
 Op verzoek: alle breitechniektermen consistent Engels (steken→stitches, rijen→rows, ronde→round, opzetten→cast on, recht/averecht→knit/purl, boord→cuff, hiel→heel, teen→toe), rest van de UI blijft Nederlands. Daarnaast het handmatige "Voetomtrek"-veld verwijderd — dat werd toch al automatisch afgeleid uit de EU-schoenmaat en stond gebruikers soms op een verkeerde default (21). `circumference` is nu een verborgen `<input type="hidden">`, alleen gevuld via `updateCircFromEuSize()` (zie fix hierboven voor hoe die functie zich uiteindelijk gedraagt).
-
-## 2026-07-12 — Sokkentool: voetomtrek automatisch geschat via EU-maat (Regia-opzettabel)
-Voetomtrek moest tot nu toe met de hand ingevuld worden (default bleef vaak op 21 staan, ook als dat niet klopte voor de gekozen maat) — gebruiker mat dit zelf nooit, wilde het afleiden uit een echte maattabel. Regia 4-ply's officiële opzetsteken-per-EU-maat-tabel (uit een foto van het garenlabel/patroon) toegevoegd als `SIZE_TABLE` (paren van maatbruggen 22/23 t/m 46/47, lineair geïnterpoleerd tussen middelpunten). Bij het invullen van de EU-maat werd `circumference` berekend: opzetsteken uit de tabel → effectieve omtrek via de eigen gauge-invoer (`sts / (gauge/10)`) → terug naar ruwe voetomtrek via de eigen ease-invoer (`effectiveCirc / (1 - ease/100)`), zodat het resultaat de eigen gauge/ease van de gebruiker blijft respecteren i.p.v. Regia's vaste garen. Geverifieerd: EU 41 → 64 opzetsteken, EU 39 → 60 opzetsteken, beide exact gelijk aan de tabel. (Zie ook de entry hierboven — het veld zelf is inmiddels verborgen.)
 
 

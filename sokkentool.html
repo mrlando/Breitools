@@ -75,15 +75,6 @@
     </div>
   </div>
 
-  <div class="result-card glass">
-    <div class="value" id="summarySts">-</div>
-    <div class="label">stitches cast on</div>
-    <div class="rounded-row">
-      <span class="rounded-value" id="summaryCirc">-</span>
-      <span class="rounded-label">effectieve omtrek</span>
-    </div>
-  </div>
-
   <ol class="steps" id="stepsList"></ol>
 
   <button class="scroll-top-btn" id="scrollTopBtn" aria-label="Naar boven">
@@ -102,8 +93,6 @@
   const legLengthInput = document.getElementById('legLength');
   const cuffLengthInput = document.getElementById('cuffLength');
   const stepsList = document.getElementById('stepsList');
-  const summarySts = document.getElementById('summarySts');
-  const summaryCirc = document.getElementById('summaryCirc');
 
   function roundToMultiple(x, m) {
     return Math.round(x / m) * m;
@@ -155,8 +144,6 @@
         || gauge <= 0 || rowGauge <= 0 || circumference <= 0 || ease >= 100 || ribKnit <= 0 || ribPurl <= 0 || footLength <= 0 || legLength < 0
         || cuffLength < 0 || cuffLength > legLength) {
       stepsList.innerHTML = '<li class="step glass"><span class="step-body"><span class="step-title">Vul alle velden geldig in</span></span></li>';
-      summarySts.textContent = '-';
-      summaryCirc.textContent = '-';
       return;
     }
 
@@ -197,16 +184,9 @@
       'Long-tail of German twisted cast-on, ' + ribKnit + 'x' + ribPurl + ' rib. Effectieve omtrek: ' + fmt(effectiveCirc) + ' cm.');
     html += stepHtml(2, legRows + ' rounds been breien',
       cuffRows + ' rounds ' + ribKnit + 'x' + ribPurl + ' rib (' + fmt(cuffLength) + ' cm cuff), dan ' + stockinetteRows + ' rounds stockinette tot de heel — samen ' + fmt(legLength) + ' cm.');
-    html += stepHtml(3, heelRows + ' rows German short row heel',
-      'Heen en weer over ' + heelSts + ' stitches (de helft). Eerst turns tot ' + centerSts + ' center stitches overblijven (' + turnsPerSide + ' per kant), dan de turns weer oplossen.');
-    html += stepHtml(4, footRounds + ' rounds vanaf einde heel tot toe',
+    html += stepHtml(3, footRounds + ' rounds vanaf einde heel tot toe',
       'In the round op alle ' + sockSts + ' stitches — ' + fmt(footRounds / rowPerCm) + ' cm vanaf einde heel tot toe (heel: ' + heelRows + ' rows, niet meegerekend).');
-    html += stepHtml(5, toeRounds + ' rounds toe',
-      'Fase 1: 4 stitches minderen om de round, ' + decEventsPhase1 + '× tot ' + phase1Target + ' stitches. Fase 2: elke round minderen, ' + decEventsPhase2 + '× tot ' + finalToeSts + ' stitches. Sluit met Kitchener stitch (grafting).');
     stepsList.innerHTML = html;
-
-    summarySts.textContent = sockSts;
-    summaryCirc.textContent = fmt(effectiveCirc) + ' cm';
   }
 
   function updateCircFromEuSize() {
