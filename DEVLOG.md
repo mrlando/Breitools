@@ -1,5 +1,8 @@
 # DEVLOG
 
+## 2026-07-12 — Client-side cache-busting via VERSION-check
+GitHub Pages cachet zelf al maar 10 min (`max-age=600`, niet aanpasbaar op de gratis tier zonder custom headers), maar browser/PWA-cache (vooral "Zet op beginscherm" op iOS) hield pagina's soms langer vast. `version-check.js` toegevoegd: haalt bij elke page load `VERSION` op met `cache: 'no-store'` (paar bytes, verwaarloosbare impact), vergelijkt met `localStorage`, en forceert alleen een verse reload (cache-bustende `?_v=`-query, daarna weer opgeschoond via `history.replaceState`) als de versie écht is veranderd sinds het vorige bezoek. Opgenomen in de `<head>` van alle 5 pagina's.
+
 ## 2026-07-12 — Buildnummer op startscherm + responsive layout voor iPad/landscape
 Onopvallend versienummer (`v<span id="buildVersion">`) onderaan `index.html`, opgehaald uit `VERSION`. Wordt automatisch opgehoogd via een git pre-commit hook (`.githooks/pre-commit`, geactiveerd met `git config core.hooksPath .githooks`) die bij elke commit `VERSION` +1 doet en het cijfer in `index.html` bijwerkt — dus geen handmatige stap nodig bij toekomstige deploys.
 Daarnaast een `@media (min-width: 700px)` block in `style.css` toegevoegd: de vaste 420px-kolom (bedoeld voor iPhone-portrait) wordt op iPad/landscape 640px breed met iets grotere iconen/padding/tekst, in plaats van een smal kolommetje midden op een groot scherm.
