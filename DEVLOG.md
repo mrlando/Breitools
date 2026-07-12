@@ -2,6 +2,9 @@
 
 (oudere entries: zie DEVLOG_ARCHIVE.md)
 
+## 2026-07-12 — Periodieke version-check i.p.v. alleen bij laden
+App bleef als geïnstalleerde PWA vaak op een oude versie hangen — de check in `version-check.js` liep tot nu toe alleen één keer bij het laden van de pagina, en een homescreen-app die dagenlang open/op de achtergrond blijft krijgt dat laadmoment nooit opnieuw. Check omgezet naar een herbruikbare `checkVersion()`-functie: draait nu ook elke 3 minuten via `setInterval`, én meteen zodra de app weer zichtbaar wordt na de achtergrond (`visibilitychange`, `!document.hidden`). Om een herlaad niet midden in het typen te forceren, slaat `checkVersion()` over als `document.activeElement` een `INPUT` is — de volgende cyclus probeert het gewoon opnieuw. Geverifieerd: oude `buildVersion` (1) in localStorage gezet, na herladen automatisch bijgewerkt naar de actuele VERSION (18), geen console-fouten.
+
 ## 2026-07-12 — Garenschatting: buffer instelbaar + rose vlakken donkerder voor leesbaarheid
 Buffer stond vast op 10%, niet ideaal voor grote projecten (bv. 10 bollen) waar dat een grote overschatting geeft. Nieuw veld `buffer` (%) toegevoegd met default 10, gebruikt in `calculate()` i.p.v. de hardcoded `* 1.1`; validatie weigert negatieve waardes. Label onder de resultaatkaart toont nu dynamisch "incl. X% buffer". Daarnaast: het rose vlak van `.result-card` en `.step` had een felle witte highlight linksboven (`radial-gradient` op 10% 5%) die de tekst daar minder leesbaar maakte — highlight-opacity verlaagd (0.4→0.18 en 0.25→0.1) en de gradient zelf donkerder gemaakt (terracotta→plum i.p.v. rose→terracotta) voor meer contrast met de witte tekst. Geverifieerd: buffer 5% → 7 bollen/1260m, negatieve buffer geeft "-", screenshots bevestigen betere leesbaarheid linksboven op zowel garenschatting als sokkentool.
 
