@@ -205,7 +205,7 @@
     if (!isNaN(gauge) && gauge > 0 && !isNaN(ease) && ease < 100) {
       const castOnSts = interpolateCastOnSts(euSize);
       const effectiveCirc = castOnSts / (gauge / 10);
-      circInput.value = fmt(effectiveCirc / (1 - ease / 100));
+      circInput.value = effectiveCirc / (1 - ease / 100);
     }
   }
 

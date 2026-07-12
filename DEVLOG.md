@@ -2,6 +2,9 @@
 
 (oudere entries: zie DEVLOG_ARCHIVE.md)
 
+## 2026-07-12 — Fix: dubbele afronding gaf soms een verkeerd stekenaantal (bv. 64 i.p.v. 60)
+`updateCircFromEuSize()` sloeg de afgeleide voetomtrek op via `fmt()`, wat afrondt op 1 decimaal én omzet naar een komma-string — die afgeronde waarde werd vervolgens weer teruggerekend naar steken in `calculate()`. Bij een EU-maat die niet exact op een tabelwaarde valt (geïnterpoleerd, dus het exacte stekenaantal ligt niet op een veelvoud van de rib, bv. 62 tussen 60 en 64) kon die kleine afrondingsfout de uitkomst net over de grens duwen — soms 60, soms 64 stitches voor dezelfde maat, afhankelijk van de volgorde van invoer. Fix: `circInput.value` bewaart nu de volledige precisie (geen `fmt()` meer); er wordt pas op het eind afgerond, bij `roundToMultiple(exactSts, multiple)` in `calculate()`. Geverifieerd: EU 37/39/40/41/43 herhaald ingevuld geeft nu telkens hetzelfde, stabiele stekenaantal.
+
 ## 2026-07-12 — Fix: ease-slider deed niets meer zodra EU-maat was ingevuld
 Vorige entry (hieronder) liet `updateCircFromEuSize()` ook draaien bij elke wijziging van `gauge`/`ease`, met de bedoeling het opzetstekenaantal vast te houden aan de Regia-tabel. Bijwerking: dat trekt de ease-waarde eerst eruit en past 'm er meteen weer overheen — algebraïsch heft dat elkaar exact op, dus de ease-slider had daarna geen enkel effect meer op het aantal opzetsteken zodra een EU-maat was ingevuld (bevestigd: 64 stitches bleef 64 bij ease 10% én bij ease 15%). Root cause: de voetomtrek moet als vaste fysieke maat behandeld worden zodra hij één keer is afgeleid uit de tabel, niet telkens opnieuw teruggerekend naar diezelfde tabel. Fix: `updateCircFromEuSize()` draait nu alleen nog bij het invullen van de EU-maat zelf (gebruikt de op dat moment geldende gauge/ease als aanname om de voetomtrek te schatten); latere aanpassingen aan `gauge`/`ease` gaan terug naar de normale `calculate()`-listener zonder de voetomtrek opnieuw af te leiden. Geverifieerd: EU 41 → 64 stitches bij ease 10%, → 60 stitches bij ease 15% (voetomtrek blijft intern vast op 23,7 cm).
 
@@ -18,6 +21,3 @@ Voetomtrek moest tot nu toe met de hand ingevuld worden (default bleef vaak op 2
 
 ## 2026-07-12 — Sokkentool stap 3 herformuleerd + verouderde subtitel gefixt
 Stap 3-tekst gebruikte "samen" (suggereerde een totaal), terwijl het al alleen het stuk vanaf einde hiel tot teen was — herschreven zonder het woord "samen". Ook de tool-kaart-subtitel op `index.html` was nog blijven hangen op de oude "boord, hiel, voet en teen (cuff-down/toe-up)"-tekst sinds de toe-up-verwijdering — teruggebracht naar dezelfde subtitel als de sokkentool-pagina zelf.
-
-## 2026-07-12 — App-titel: "Breitools" → "Monika's breitools"
-Hernoemd op alle plekken: `<title>`/`<h1>` in `index.html`, `<title>` van de 3 tool-pagina's, en `name`/`short_name` in `manifest.json` (bepaalt het label onder het "Zet op beginscherm"-icoon).

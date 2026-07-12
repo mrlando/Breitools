@@ -2,6 +2,9 @@
 
 Oudere entries, verplaatst uit DEVLOG.md om die compact te houden (~6 entries max).
 
+## 2026-07-12 — App-titel: "Breitools" → "Monika's breitools"
+Hernoemd op alle plekken: `<title>`/`<h1>` in `index.html`, `<title>` van de 3 tool-pagina's, en `name`/`short_name` in `manifest.json` (bepaalt het label onder het "Zet op beginscherm"-icoon).
+
 ## 2026-07-12 — Sokkentool: toe-up verwijderd, hernoemd naar sokkentool.html
 Volledige toe-up-constructie uit `sokmaat.html` verwijderd (toggle-knoppen, `setConstruction`, toe-up-tak in `calculate()`) — cuff-down is nu de enige constructiemethode. Bestand hernoemd naar `sokkentool.html` (`git mv`), link in `index.html` bijgewerkt.
 
