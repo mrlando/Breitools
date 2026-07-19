@@ -2,6 +2,9 @@
 
 (oudere entries: zie DEVLOG_ARCHIVE.md)
 
+## 2026-07-19 — Sokkentool: maatrange als eigen rose blok, groter
+De maatrange-tekst stond als kleine grijze `.field-hint`-regel, gebruiker wilde 'm als eigen rose kaart met de range groter uitgelicht. Nieuwe `.size-range-card` in `style.css` (zelfde rose→terracotta gradient-stijl als `.result-card`/`.step`), HTML omgezet naar `<span class="value">`/`<span class="label">` i.p.v. platte tekst-hint. `updateSizeRangeHint()` zet nu alleen `sizeRangeValue.textContent` (bv. "38–40"); kaart verbergt zichzelf (`visibility: hidden`) bij een ongeldige maat i.p.v. leeg te blijven. Geverifieerd op mobile-breedte (375px): EU 39 → rose kaart met "38–40" groot, label "COMFORTABELE MAATRANGE (EU)" eronder. VERSION → 23.
+
 ## 2026-07-19 — Sokkentool: maatrange-hint bij EU-schoenmaat
 Verzoek: sokken worden in de winkel altijd als range verkocht (bv. "37-39"), zou dat ook in de app kunnen? Nieuwe `<p id="sizeRangeHint">` onder het EU-schoenmaat-veld, bijgewerkt in `updateSizeRangeHint()` (aangeroepen vanuit beide sync-listeners + bij page load). Range = afgeronde EU-maat ±1, gebaseerd op de rek van gebreide stof (negatieve ease) — dus geen kopie van een willekeurige verpakkingsconventie (die verschilt per merk), maar de daadwerkelijke pasvorm van een zelfgebreide sok. Bevestigd: bestaande formule `euSizeToFootLength` (EU × ⅔ − 1,5) gaf al exact 24,5 cm voor EU 39, dus geen wijziging nodig aan de kernberekening — alleen de nieuwe hint toegevoegd. VERSION → 21.
 

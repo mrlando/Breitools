@@ -58,7 +58,10 @@
       <label for="euSize">EU-schoenmaat</label>
       <input type="text" inputmode="decimal" id="euSize" value="39">
       <p class="field-hint">Basis voor de maat: bepaalt de voetlengte (vuistregel EU-maat × ⅔ cm − 1,5 cm) en de voetomtrek (Regia's cast-on-tabel, omgerekend naar jouw gauge/ease). Pas je de voetlengte hieronder handmatig aan, dan wordt de schoenmaat teruggerekend.</p>
-      <p class="field-hint" id="sizeRangeHint"></p>
+      <div class="size-range-card" id="sizeRangeCard">
+        <span class="value" id="sizeRangeValue"></span>
+        <span class="label">comfortabele maatrange (EU)</span>
+      </div>
     </div>
     <div class="field">
       <label for="footLength">Voetlengte (cm)</label>
@@ -212,13 +215,15 @@
     return (footLength + 1.5) / (2 / 3);
   }
 
-  const sizeRangeHint = document.getElementById('sizeRangeHint');
+  const sizeRangeCard = document.getElementById('sizeRangeCard');
+  const sizeRangeValue = document.getElementById('sizeRangeValue');
 
   function updateSizeRangeHint() {
     const euSize = parseNum(euSizeInput.value);
-    if (isNaN(euSize) || euSize <= 0) { sizeRangeHint.textContent = ''; return; }
+    if (isNaN(euSize) || euSize <= 0) { sizeRangeCard.style.visibility = 'hidden'; return; }
+    sizeRangeCard.style.visibility = 'visible';
     const rounded = Math.round(euSize);
-    sizeRangeHint.innerHTML = '<strong>Maatrange:</strong> deze sok (dankzij rek van de rib/stockinette) past comfortabel van EU ' + (rounded - 1) + ' t/m ' + (rounded + 1) + ' — vergelijkbaar met de "' + (rounded - 1) + '-' + (rounded + 1) + '" op verpakkingen van gekochte sokken.';
+    sizeRangeValue.textContent = (rounded - 1) + '–' + (rounded + 1);
   }
 
   euSizeInput.addEventListener('input', () => {

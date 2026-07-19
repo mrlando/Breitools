@@ -149,6 +149,40 @@ input:focus {
 .rounded-row .rounded-value { font-size: 1.3em; font-weight: 700; }
 .rounded-row .rounded-label { font-size: 0.78em; opacity: 0.85; }
 
+.size-range-card {
+  margin-top: 12px;
+  padding: 16px 18px;
+  border-radius: 20px;
+  text-align: center;
+  background:
+    radial-gradient(circle at 10% 5%, rgba(255,255,255,0.18), rgba(255,255,255,0) 45%),
+    linear-gradient(180deg, rgba(255,255,255,0.12) 0%, rgba(255,255,255,0) 45%),
+    linear-gradient(145deg, rgba(217,142,148,0.95), rgba(193,105,79,0.95));
+  border: 1px solid rgba(255,255,255,0.5);
+  box-shadow:
+    0 10px 28px rgba(217,142,148,0.35),
+    inset 0 1px 0 rgba(255,255,255,0.5),
+    inset 0 -1px 0 rgba(0,0,0,0.05);
+}
+.size-range-card .value {
+  display: block;
+  font-size: 1.9em;
+  font-weight: 800;
+  letter-spacing: -0.01em;
+  color: #fff;
+  text-shadow: 0 2px 8px rgba(0,0,0,0.15);
+}
+.size-range-card .label {
+  display: block;
+  margin-top: 3px;
+  font-size: 0.75em;
+  font-weight: 600;
+  color: #fff;
+  opacity: 0.9;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
 .hint { margin-top: 16px; font-size: 0.85em; opacity: 0.55; text-align: center; line-height: 1.4; }
 .hint strong { color: var(--wool-plum); opacity: 1; }
 
