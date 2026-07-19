@@ -2,6 +2,9 @@
 
 (oudere entries: zie DEVLOG_ARCHIVE.md)
 
+## 2026-07-19 — Tool schoenmaat.html hernoemd naar "Sokmaat range"
+Gebruiker vond "Schoenmaat" verwarrend als naam. Title/`<h1>` in schoenmaat.html en de tool-naam op het startscherm (index.html) aangepast naar "Sokmaat range"; bestandsnaam (`schoenmaat.html`) ongewijzigd gelaten. VERSION → 33.
+
 ## 2026-07-19 — Nieuwe tool: schoenmaat.html (losse maatrange-calculator)
 Gebruiker wilde de maatrange-berekening los van de sokkenpatroon-tool beschikbaar hebben, met alleen voetlengte (cm) als invoer. Nieuwe pagina `schoenmaat.html` toegevoegd (zelfde structuur/CSS-patroon als sokkentool.html: `.card.glass` invoerveld, `.step`-stappenlijst), met `footLengthToEuSize()` en dezelfde bias-afrondingslogica (`rangeSwitchThreshold` 0,75) als sokkentool.html, 1-op-1 gekopieerd zodat beide tools identiek rekenen. Toont EU-maat + 3-maten comfortabele range. Nieuwe tool-card toegevoegd aan `index.html` (schoenmaat.html), tussen sokkentool en einde lijst. Geverifieerd in browser: 24,5 cm → EU 39 → range 38–40 (identiek aan sokkentool.html bij dezelfde invoer), geen console-fouten. VERSION → 31.
 
