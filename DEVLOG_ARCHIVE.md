@@ -2,6 +2,9 @@
 
 Oudere entries, verplaatst uit DEVLOG.md om die compact te houden (~8 entries max).
 
+## 2026-07-12 — Sokkentool: heel/toe-stappen en samenvattingskaart weer weg
+Correctie op de vorige entry: de heel- en teen-stappen (3 en 5) en de rose samenvattingskaart waren bewust weggehaald in een eerdere sessie — gebruiker doet die twee onderdelen vanzelf, zonder stap-voor-stap-instructie nodig. Teruggezet naar 3 stappen (cast on, been, voet); interne heel/teen-berekeningen (`heelSts`, `centerSts`, `turnsPerSide`, `toeRounds` e.d.) blijven bestaan omdat `footRounds` ze nog nodig heeft om af te trekken, maar worden niet meer getoond.
+
 ## 2026-07-12 — App-brede review: rib-afronding terug + alle gevonden punten gefixt
 Rib-afronding van het cast-on aantal (op som van knit+purl) op verzoek teruggezet (was in v14 verwijderd); de EU↔voetlengte-koppeling uit v14 blijft. Daarnaast alle punten uit de app-review: (1) index-kaart Sokkenpatroon nu ook Engelse termen ("cuff tot toe … heel"); (2) ease ≥ 100% is nu ongeldig i.p.v. 0/negatieve stitches; (3) garenschatting weigert meters ≤ 0 en toont meters incl. 10% buffer als extra regel; (4) switchgewicht weigert negatief restgewicht; (5) rounds i.p.v. rows voor alles wat in the round gebreid wordt (been/voet/toe), heel blijft rows (heen-en-weer); (6) heel- en toe-stappen toegevoegd aan het recept (nu 5 stappen, getallen werden al intern berekend); (7) samenvattingskaart (stitches + effectieve omtrek) boven de stappen; (8) gedupliceerde JS (parseNum/fmt/scroll-top/toetsenbord-blur) naar nieuw `common.js`; (9) ongebruikt `opties.html` verwijderd; (10) dode `.toggle-row`/`.toggle-btn` CSS weg; (11) manifest `short_name` → "Breitools" (paste niet onder homescreen-icoon); (12) stale `value="21"` van verborgen circumference-veld weg. Geverifieerd: EU 39 → 60 stitches (veelvoud 4), EU 41 met ease 15% → 60 i.p.v. 64 (ease werkt), sync beide kanten intact, geen console-fouten op alle pagina's.
 

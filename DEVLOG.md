@@ -2,6 +2,9 @@
 
 (oudere entries: zie DEVLOG_ARCHIVE.md)
 
+## 2026-07-19 — Maatrange verplaatst naar blok 4 van de stappenlijst
+Gebruiker verwachtte de rose maatrange-kaart als 4e genummerd blok bij de andere stappen (cast on/been/voet), niet als los kaartje onder het EU-schoenmaat-veld. `.size-range-card`-div uit de HTML en de bijbehorende `updateSizeRangeHint()`/`sizeRangeCard`/`sizeRangeValue`-logica verwijderd; de range wordt nu berekend binnen `calculate()` en als 4e `stepHtml()`-item toegevoegd aan `stepsList` (zelfde rose/terracotta `.step`-stijl, genummerde cirkel "4"), met de range zelf groot uitgelicht via nieuwe CSS-klasse `.step-range-value` (1,6em, bold) in plaats van een aparte kaart. Ongebruikte `.size-range-card`-CSS verwijderd. Geverifieerd in browser (mobile-viewport): blok 4 "Comfortabele maatrange — Deze sok past bij EU-schoenmaat 38–40" toont correct onder blok 3, geen console-fouten, weg bij het EU-schoenmaat-veld. VERSION → 27.
+
 ## 2026-07-19 — Fix: maatrange te grof afgerond (21,5 cm en 22,1 cm gaven dezelfde 34-36)
 `updateSizeRangeHint()` rondde eerst de EU-maat af naar de dichtstbijzijnde hele maat (`Math.round`) en telde er dan ±1 bij op — twee voetlengtes die toevallig naar dezelfde hele maat afronden (bv. 34,5 en 35,4 ronden allebei naar 35) kregen zo exact dezelfde range, ook al zat er bijna een hele maat tussen. Fix: range wordt nu berekend als `Math.floor(euSize) − 1` tot `Math.ceil(euSize) + 1` — bij een euSize precies op een hele maat blijft de range netjes 3 maten breed (bv. 39 → 38-40), maar bij een euSize tussen twee hele maten in verbreedt de range zich naar de kant waar de maat op uitkomt (4 maten breed) i.p.v. blind af te ronden. Geverifieerd: 21,5 cm (EU 34,5) → 33-36, 22,1 cm (EU 35,4) → 34-37 (nu wél verschillend), 24,5 cm (EU 39) → 38-40 (ongewijzigd). VERSION → 25.
 
@@ -22,8 +25,5 @@ Buffer stond vast op 10%, niet ideaal voor grote projecten (bv. 10 bollen) waar 
 
 ## 2026-07-12 — DEVLOG-cap naar 8 entries; sokkentool-stappen rose gestyled
 DEVLOG.md-cap opgehoogd van ~6 naar ~8 entries (was te krap om snel terug te kijken naar recente beslissingen, archief blijft altijd doorzoekbaar). Daarnaast `.step` in `style.css` van neutraal glas naar dezelfde rose/terracotta gradient als de eerder verwijderde `.result-card` — genummerde cirkel (`.step-num`) nu een subtiele witte cirkel op die achtergrond i.p.v. eigen gradient, tekst wit met hogere opacity voor leesbaarheid. Geverifieerd in browser: geen console-fouten, stappen tonen correct in rose.
-
-## 2026-07-12 — Sokkentool: heel/toe-stappen en samenvattingskaart weer weg
-Correctie op de vorige entry: de heel- en teen-stappen (3 en 5) en de rose samenvattingskaart waren bewust weggehaald in een eerdere sessie — gebruiker doet die twee onderdelen vanzelf, zonder stap-voor-stap-instructie nodig. Teruggezet naar 3 stappen (cast on, been, voet); interne heel/teen-berekeningen (`heelSts`, `centerSts`, `turnsPerSide`, `toeRounds` e.d.) blijven bestaan omdat `footRounds` ze nog nodig heeft om af te trekken, maar worden niet meer getoond.
 
 

@@ -58,10 +58,6 @@
       <label for="euSize">EU-schoenmaat</label>
       <input type="text" inputmode="decimal" id="euSize" value="39">
       <p class="field-hint">Basis voor de maat: bepaalt de voetlengte (vuistregel EU-maat × ⅔ cm − 1,5 cm) en de voetomtrek (Regia's cast-on-tabel, omgerekend naar jouw gauge/ease). Pas je de voetlengte hieronder handmatig aan, dan wordt de schoenmaat teruggerekend.</p>
-      <div class="size-range-card" id="sizeRangeCard">
-        <span class="value" id="sizeRangeValue"></span>
-        <span class="label">comfortabele maatrange (EU)</span>
-      </div>
     </div>
     <div class="field">
       <label for="footLength">Voetlengte (cm)</label>
@@ -190,6 +186,18 @@
       cuffRows + ' rounds ' + ribKnit + 'x' + ribPurl + ' rib (' + fmt(cuffLength) + ' cm cuff), dan ' + stockinetteRows + ' rounds stockinette tot de heel — samen ' + fmt(legLength) + ' cm.');
     html += stepHtml(3, footRounds + ' rounds vanaf einde heel tot toe',
       'In the round op alle ' + sockSts + ' stitches — ' + fmt(footRounds / rowPerCm) + ' cm vanaf einde heel tot toe (heel: ' + heelRows + ' rows, niet meegerekend).');
+
+    const euSize = parseNum(euSizeInput.value);
+    if (!isNaN(euSize) && euSize > 0) {
+      // floor/ceil i.p.v. round: bij een euSize tussen twee hele maten in verbreedt
+      // de range zich naar de kant waar de maat op uitkomt (34,5 -> 33-36, 35,4 -> 34-37)
+      // i.p.v. dat beide naar dezelfde afgeronde maat vallen en identieke ranges krijgen.
+      const lower = Math.floor(euSize) - 1;
+      const upper = Math.ceil(euSize) + 1;
+      html += stepHtml(4, 'Comfortabele maatrange',
+        'Deze sok past bij EU-schoenmaat <span class="step-range-value">' + lower + '–' + upper + '</span>.');
+    }
+
     stepsList.innerHTML = html;
   }
 
@@ -215,23 +223,6 @@
     return (footLength + 1.5) / (2 / 3);
   }
 
-  const sizeRangeCard = document.getElementById('sizeRangeCard');
-  const sizeRangeValue = document.getElementById('sizeRangeValue');
-
-  function updateSizeRangeHint() {
-    const euSize = parseNum(euSizeInput.value);
-    if (isNaN(euSize) || euSize <= 0) { sizeRangeCard.style.visibility = 'hidden'; return; }
-    sizeRangeCard.style.visibility = 'visible';
-    // Bij een euSize precies op een hele maat: nette ±1-range (bv. 39 -> 38-40).
-    // Bij een euSize tussen twee hele maten in (bv. 34,5 of 35,4): de range verbreedt
-    // zich naar de kant waar de maat op uitkomt, i.p.v. simpelweg af te ronden —
-    // anders krijgen 21,5 cm (34,5) en 22,1 cm (35,4) dezelfde range terwijl er
-    // bijna een hele maat tussen zit.
-    const lower = Math.floor(euSize) - 1;
-    const upper = Math.ceil(euSize) + 1;
-    sizeRangeValue.textContent = lower + '–' + upper;
-  }
-
   euSizeInput.addEventListener('input', () => {
     if (syncingSize) return;
     const euSize = parseNum(euSizeInput.value);
@@ -240,7 +231,6 @@
     footLengthInput.value = fmt(euSizeToFootLength(euSize));
     syncingSize = false;
     updateCircFromEuSize();
-    updateSizeRangeHint();
     calculate();
   });
 
@@ -252,7 +242,6 @@
     euSizeInput.value = fmt(footLengthToEuSize(footLength));
     syncingSize = false;
     updateCircFromEuSize();
-    updateSizeRangeHint();
     calculate();
   });
 
@@ -260,7 +249,6 @@
     .forEach(el => el.addEventListener('input', calculate));
 
   updateCircFromEuSize();
-  updateSizeRangeHint();
   calculate();
 </script>
 </body>
