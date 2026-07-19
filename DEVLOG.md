@@ -2,6 +2,9 @@
 
 (oudere entries: zie DEVLOG_ARCHIVE.md)
 
+## 2026-07-19 — Nieuwe tool: schoenmaat.html (losse maatrange-calculator)
+Gebruiker wilde de maatrange-berekening los van de sokkenpatroon-tool beschikbaar hebben, met alleen voetlengte (cm) als invoer. Nieuwe pagina `schoenmaat.html` toegevoegd (zelfde structuur/CSS-patroon als sokkentool.html: `.card.glass` invoerveld, `.step`-stappenlijst), met `footLengthToEuSize()` en dezelfde bias-afrondingslogica (`rangeSwitchThreshold` 0,75) als sokkentool.html, 1-op-1 gekopieerd zodat beide tools identiek rekenen. Toont EU-maat + 3-maten comfortabele range. Nieuwe tool-card toegevoegd aan `index.html` (schoenmaat.html), tussen sokkentool en einde lijst. Geverifieerd in browser: 24,5 cm → EU 39 → range 38–40 (identiek aan sokkentool.html bij dezelfde invoer), geen console-fouten. VERSION → 31.
+
 ## 2026-07-19 — Maatrange: bias naar kleinere maat i.p.v. variabele breedte
 Vorige fix (floor/ceil) loste de precisie op door de range 3 of 4 maten breed te maken, maar gebruiker wilde altijd exact 3 maten én liever een te kleine dan te grote range (sok rekt toch mee dankzij negatieve ease). Center wordt nu berekend als `Math.floor(euSize)`, tenzij het fractionele deel ≥ `rangeSwitchThreshold` (0,75) is — dan pas springt hij naar de volgende hele maat. Range blijft altijd `center ± 1`. Lost meteen ook de oorspronkelijke precisie-klacht op: 34,5 (frac 0,5 < 0,75) → center 34 → 33–35; 35,4 (frac 0,4 < 0,75) → center 35 → 34–36 — nu wél verschillend. Geverifieerd via console: 39→38–40, 34,5→33–35, 35,4→34–36, 34,8→34–36 (over de drempel), 34,74→33–35 (net eronder). VERSION → 29.
 

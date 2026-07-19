@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Schoenmaat - Monika's breitools</title>
+<link rel="stylesheet" href="style.css">
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#c1694f">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="icon" href="favicon-32.png" sizes="32x32">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<script src="version-check.js"></script>
+<script src="common.js"></script>
+</head>
+<body>
+  <a class="back-link" href="index.html">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 6l-6 6 6 6"/></svg>
+    Terug
+  </a>
+  <div class="header">
+    <div class="icon">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M4 15c0-1.5 1-2.5 2.5-2.5H10l3-4h4.5A2.5 2.5 0 0 1 20 11v4a2.5 2.5 0 0 1-2.5 2.5H6A2.5 2.5 0 0 1 4 15Z"/>
+        <path d="M8 12.5V8a2 2 0 0 1 2-2h1"/>
+      </svg>
+    </div>
+    <h1>Schoenmaat</h1>
+    <p class="sub">Voetlengte naar EU-schoenmaat en comfortabele maatrange</p>
+  </div>
+
+  <div class="card glass">
+    <div class="field">
+      <label for="footLength">Voetlengte (cm)</label>
+      <input type="text" inputmode="decimal" id="footLength" value="24,5">
+    </div>
+  </div>
+
+  <ol class="steps" id="stepsList"></ol>
+
+<script>
+  const footLengthInput = document.getElementById('footLength');
+  const stepsList = document.getElementById('stepsList');
+
+  function stepHtml(num, title, detail) {
+    return '<li class="step glass"><span class="step-num">' + num + '</span>' +
+      '<span class="step-body"><span class="step-title">' + title + '</span>' +
+      '<span class="step-detail">' + detail + '</span></span></li>';
+  }
+
+  function footLengthToEuSize(footLength) {
+    return (footLength + 1.5) / (2 / 3);
+  }
+
+  function calculate() {
+    const footLength = parseNum(footLengthInput.value);
+
+    if (isNaN(footLength) || footLength <= 0) {
+      stepsList.innerHTML = '<li class="step glass"><span class="step-body"><span class="step-title">Vul een geldige voetlengte in</span></span></li>';
+      return;
+    }
+
+    const euSize = footLengthToEuSize(footLength);
+
+    // Center rondt naar beneden af, tenzij euSize dicht genoeg (>= drempel) bij de
+    // volgende hele maat zit — bias richting "iets te klein" (sokken rekken toch al
+    // mee dankzij negatieve ease). Range blijft altijd exact 3 maten breed.
+    const rangeSwitchThreshold = 0.75;
+    const frac = euSize - Math.floor(euSize);
+    const center = Math.floor(euSize) + (frac >= rangeSwitchThreshold ? 1 : 0);
+    const lower = center - 1;
+    const upper = center + 1;
+
+    let html = '';
+    html += stepHtml(1, 'EU-schoenmaat', 'Bij ' + fmt(footLength) + ' cm hoort EU-maat <span class="step-range-value">' + fmt(euSize) + '</span>.');
+    html += stepHtml(2, 'Comfortabele maatrange', 'Deze sok past bij EU-schoenmaat <span class="step-range-value">' + lower + '–' + upper + '</span>.');
+
+    stepsList.innerHTML = html;
+  }
+
+  footLengthInput.addEventListener('input', calculate);
+
+  calculate();
+</script>
+</body>
+</html>
