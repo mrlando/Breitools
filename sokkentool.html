@@ -189,11 +189,16 @@
 
     const euSize = parseNum(euSizeInput.value);
     if (!isNaN(euSize) && euSize > 0) {
-      // floor/ceil i.p.v. round: bij een euSize tussen twee hele maten in verbreedt
-      // de range zich naar de kant waar de maat op uitkomt (34,5 -> 33-36, 35,4 -> 34-37)
-      // i.p.v. dat beide naar dezelfde afgeronde maat vallen en identieke ranges krijgen.
-      const lower = Math.floor(euSize) - 1;
-      const upper = Math.ceil(euSize) + 1;
+      // Center rondt naar beneden af, tenzij euSize dicht genoeg (>= drempel) bij de
+      // volgende hele maat zit — bias richting "iets te klein" (de sok rekt toch al
+      // mee dankzij negatieve ease), en voorkomt dat voetlengtes die dicht bij elkaar
+      // liggen (bv. 34,5 en 35,4) toevallig dezelfde range krijgen. Range blijft altijd
+      // exact 3 maten breed.
+      const rangeSwitchThreshold = 0.75;
+      const frac = euSize - Math.floor(euSize);
+      const center = Math.floor(euSize) + (frac >= rangeSwitchThreshold ? 1 : 0);
+      const lower = center - 1;
+      const upper = center + 1;
       html += stepHtml(4, 'Comfortabele maatrange',
         'Deze sok past bij EU-schoenmaat <span class="step-range-value">' + lower + '–' + upper + '</span>.');
     }

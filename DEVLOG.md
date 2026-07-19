@@ -2,6 +2,9 @@
 
 (oudere entries: zie DEVLOG_ARCHIVE.md)
 
+## 2026-07-19 — Maatrange: bias naar kleinere maat i.p.v. variabele breedte
+Vorige fix (floor/ceil) loste de precisie op door de range 3 of 4 maten breed te maken, maar gebruiker wilde altijd exact 3 maten én liever een te kleine dan te grote range (sok rekt toch mee dankzij negatieve ease). Center wordt nu berekend als `Math.floor(euSize)`, tenzij het fractionele deel ≥ `rangeSwitchThreshold` (0,75) is — dan pas springt hij naar de volgende hele maat. Range blijft altijd `center ± 1`. Lost meteen ook de oorspronkelijke precisie-klacht op: 34,5 (frac 0,5 < 0,75) → center 34 → 33–35; 35,4 (frac 0,4 < 0,75) → center 35 → 34–36 — nu wél verschillend. Geverifieerd via console: 39→38–40, 34,5→33–35, 35,4→34–36, 34,8→34–36 (over de drempel), 34,74→33–35 (net eronder). VERSION → 29.
+
 ## 2026-07-19 — Maatrange verplaatst naar blok 4 van de stappenlijst
 Gebruiker verwachtte de rose maatrange-kaart als 4e genummerd blok bij de andere stappen (cast on/been/voet), niet als los kaartje onder het EU-schoenmaat-veld. `.size-range-card`-div uit de HTML en de bijbehorende `updateSizeRangeHint()`/`sizeRangeCard`/`sizeRangeValue`-logica verwijderd; de range wordt nu berekend binnen `calculate()` en als 4e `stepHtml()`-item toegevoegd aan `stepsList` (zelfde rose/terracotta `.step`-stijl, genummerde cirkel "4"), met de range zelf groot uitgelicht via nieuwe CSS-klasse `.step-range-value` (1,6em, bold) in plaats van een aparte kaart. Ongebruikte `.size-range-card`-CSS verwijderd. Geverifieerd in browser (mobile-viewport): blok 4 "Comfortabele maatrange — Deze sok past bij EU-schoenmaat 38–40" toont correct onder blok 3, geen console-fouten, weg bij het EU-schoenmaat-veld. VERSION → 27.
 
@@ -22,8 +25,5 @@ App bleef als geïnstalleerde PWA vaak op een oude versie hangen — de check in
 
 ## 2026-07-12 — Garenschatting: buffer instelbaar + rose vlakken donkerder voor leesbaarheid
 Buffer stond vast op 10%, niet ideaal voor grote projecten (bv. 10 bollen) waar dat een grote overschatting geeft. Nieuw veld `buffer` (%) toegevoegd met default 10, gebruikt in `calculate()` i.p.v. de hardcoded `* 1.1`; validatie weigert negatieve waardes. Label onder de resultaatkaart toont nu dynamisch "incl. X% buffer". Daarnaast: het rose vlak van `.result-card` en `.step` had een felle witte highlight linksboven (`radial-gradient` op 10% 5%) die de tekst daar minder leesbaar maakte — highlight-opacity verlaagd (0.4→0.18 en 0.25→0.1) en de gradient zelf donkerder gemaakt (terracotta→plum i.p.v. rose→terracotta) voor meer contrast met de witte tekst. Geverifieerd: buffer 5% → 7 bollen/1260m, negatieve buffer geeft "-", screenshots bevestigen betere leesbaarheid linksboven op zowel garenschatting als sokkentool.
-
-## 2026-07-12 — DEVLOG-cap naar 8 entries; sokkentool-stappen rose gestyled
-DEVLOG.md-cap opgehoogd van ~6 naar ~8 entries (was te krap om snel terug te kijken naar recente beslissingen, archief blijft altijd doorzoekbaar). Daarnaast `.step` in `style.css` van neutraal glas naar dezelfde rose/terracotta gradient als de eerder verwijderde `.result-card` — genummerde cirkel (`.step-num`) nu een subtiele witte cirkel op die achtergrond i.p.v. eigen gradient, tekst wit met hogere opacity voor leesbaarheid. Geverifieerd in browser: geen console-fouten, stappen tonen correct in rose.
 
 

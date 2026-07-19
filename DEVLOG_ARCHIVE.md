@@ -2,6 +2,9 @@
 
 Oudere entries, verplaatst uit DEVLOG.md om die compact te houden (~8 entries max).
 
+## 2026-07-12 — DEVLOG-cap naar 8 entries; sokkentool-stappen rose gestyled
+DEVLOG.md-cap opgehoogd van ~6 naar ~8 entries (was te krap om snel terug te kijken naar recente beslissingen, archief blijft altijd doorzoekbaar). Daarnaast `.step` in `style.css` van neutraal glas naar dezelfde rose/terracotta gradient als de eerder verwijderde `.result-card` — genummerde cirkel (`.step-num`) nu een subtiele witte cirkel op die achtergrond i.p.v. eigen gradient, tekst wit met hogere opacity voor leesbaarheid. Geverifieerd in browser: geen console-fouten, stappen tonen correct in rose.
+
 ## 2026-07-12 — Sokkentool: heel/toe-stappen en samenvattingskaart weer weg
 Correctie op de vorige entry: de heel- en teen-stappen (3 en 5) en de rose samenvattingskaart waren bewust weggehaald in een eerdere sessie — gebruiker doet die twee onderdelen vanzelf, zonder stap-voor-stap-instructie nodig. Teruggezet naar 3 stappen (cast on, been, voet); interne heel/teen-berekeningen (`heelSts`, `centerSts`, `turnsPerSide`, `toeRounds` e.d.) blijven bestaan omdat `footRounds` ze nog nodig heeft om af te trekken, maar worden niet meer getoond.
 
