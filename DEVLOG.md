@@ -2,6 +2,9 @@
 
 (oudere entries: zie DEVLOG_ARCHIVE.md)
 
+## 2026-07-19 — Tool "Sokmaat range" hernoemd naar "Sokmaat-range" (streepje)
+Naam met spatie ("Sokmaat range") oogde onduidelijk; gebruiker wilde één woord of met streepje. Gekozen voor streepje ("Sokmaat-range") voor leesbaarheid. Aangepast in schoenmaat.html (`<title>`, `<h1>`) en index.html (tool-naam). VERSION → 35.
+
 ## 2026-07-19 — Tool schoenmaat.html hernoemd naar "Sokmaat range"
 Gebruiker vond "Schoenmaat" verwarrend als naam. Title/`<h1>` in schoenmaat.html en de tool-naam op het startscherm (index.html) aangepast naar "Sokmaat range"; bestandsnaam (`schoenmaat.html`) ongewijzigd gelaten. VERSION → 33.
 
