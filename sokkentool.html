@@ -222,8 +222,14 @@
     const euSize = parseNum(euSizeInput.value);
     if (isNaN(euSize) || euSize <= 0) { sizeRangeCard.style.visibility = 'hidden'; return; }
     sizeRangeCard.style.visibility = 'visible';
-    const rounded = Math.round(euSize);
-    sizeRangeValue.textContent = (rounded - 1) + '–' + (rounded + 1);
+    // Bij een euSize precies op een hele maat: nette ±1-range (bv. 39 -> 38-40).
+    // Bij een euSize tussen twee hele maten in (bv. 34,5 of 35,4): de range verbreedt
+    // zich naar de kant waar de maat op uitkomt, i.p.v. simpelweg af te ronden —
+    // anders krijgen 21,5 cm (34,5) en 22,1 cm (35,4) dezelfde range terwijl er
+    // bijna een hele maat tussen zit.
+    const lower = Math.floor(euSize) - 1;
+    const upper = Math.ceil(euSize) + 1;
+    sizeRangeValue.textContent = lower + '–' + upper;
   }
 
   euSizeInput.addEventListener('input', () => {
