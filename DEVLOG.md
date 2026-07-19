@@ -2,6 +2,9 @@
 
 (oudere entries: zie DEVLOG_ARCHIVE.md)
 
+## 2026-07-19 — Sokkentool: maatrange-hint bij EU-schoenmaat
+Verzoek: sokken worden in de winkel altijd als range verkocht (bv. "37-39"), zou dat ook in de app kunnen? Nieuwe `<p id="sizeRangeHint">` onder het EU-schoenmaat-veld, bijgewerkt in `updateSizeRangeHint()` (aangeroepen vanuit beide sync-listeners + bij page load). Range = afgeronde EU-maat ±1, gebaseerd op de rek van gebreide stof (negatieve ease) — dus geen kopie van een willekeurige verpakkingsconventie (die verschilt per merk), maar de daadwerkelijke pasvorm van een zelfgebreide sok. Bevestigd: bestaande formule `euSizeToFootLength` (EU × ⅔ − 1,5) gaf al exact 24,5 cm voor EU 39, dus geen wijziging nodig aan de kernberekening — alleen de nieuwe hint toegevoegd. VERSION → 21.
+
 ## 2026-07-12 — Ingevoerde waardes worden onthouden per pagina
 Elk tool-veld sprong terug naar de hardcoded default zodra de pagina herladen werd — vervelend voor een geïnstalleerde PWA die vaker heropend wordt. Generieke oplossing in `common.js`: bij `DOMContentLoaded` worden alle `input[type="text"][id]`-velden op de pagina automatisch hersteld uit `localStorage` (key `inputVal:<pathname>:<id>`) en bij elke `input`-event opgeslagen; geen per-pagina lijst met veld-ids nodig. Na het herstellen wordt op elk veld een `input`-event gedispatcht zodat bestaande `calculate()`/sync-logica (bv. de EU-maat↔voetlengte-koppeling in sokkentool) gewoon opnieuw draait met de herstelde waardes. Geverifieerd: garenschatting-veld naar 777 gezet en herladen → bleef 777 (5 bollen); sokkentool EU-maat naar 41 gezet en herladen → EU 41 + voetlengte 25,8 cm + juiste stitches bleven behouden, geen console-fouten.
 
@@ -25,13 +28,5 @@ Twee losse verzoeken. (1) Opzetstekenaantal werd afgerond op een veelvoud van he
 
 ## 2026-07-12 — Fix: dubbele afronding gaf soms een verkeerd stekenaantal (bv. 64 i.p.v. 60)
 `updateCircFromEuSize()` sloeg de afgeleide voetomtrek op via `fmt()`, wat afrondt op 1 decimaal én omzet naar een komma-string — die afgeronde waarde werd vervolgens weer teruggerekend naar steken in `calculate()`. Bij een EU-maat die niet exact op een tabelwaarde valt (geïnterpoleerd, dus het exacte stekenaantal ligt niet op een veelvoud van de rib, bv. 62 tussen 60 en 64) kon die kleine afrondingsfout de uitkomst net over de grens duwen — soms 60, soms 64 stitches voor dezelfde maat, afhankelijk van de volgorde van invoer. Fix: `circInput.value` bewaart nu de volledige precisie (geen `fmt()` meer); er wordt pas op het eind afgerond, bij `roundToMultiple(exactSts, multiple)` in `calculate()`. Geverifieerd: EU 37/39/40/41/43 herhaald ingevuld geeft nu telkens hetzelfde, stabiele stekenaantal.
-
-## 2026-07-12 — Fix: ease-slider deed niets meer zodra EU-maat was ingevuld
-Vorige entry (hieronder) liet `updateCircFromEuSize()` ook draaien bij elke wijziging van `gauge`/`ease`, met de bedoeling het opzetstekenaantal vast te houden aan de Regia-tabel. Bijwerking: dat trekt de ease-waarde eerst eruit en past 'm er meteen weer overheen — algebraïsch heft dat elkaar exact op, dus de ease-slider had daarna geen enkel effect meer op het aantal opzetsteken zodra een EU-maat was ingevuld (bevestigd: 64 stitches bleef 64 bij ease 10% én bij ease 15%). Root cause: de voetomtrek moet als vaste fysieke maat behandeld worden zodra hij één keer is afgeleid uit de tabel, niet telkens opnieuw teruggerekend naar diezelfde tabel. Fix: `updateCircFromEuSize()` draait nu alleen nog bij het invullen van de EU-maat zelf (gebruikt de op dat moment geldende gauge/ease als aanname om de voetomtrek te schatten); latere aanpassingen aan `gauge`/`ease` gaan terug naar de normale `calculate()`-listener zonder de voetomtrek opnieuw af te leiden. Geverifieerd: EU 41 → 64 stitches bij ease 10%, → 60 stitches bij ease 15% (voetomtrek blijft intern vast op 23,7 cm).
-
-Kanttekening: onbevestigd of Regia's tabel zelf al met ~10% negatieve ease rekent — de gefotografeerde tabel bevat alleen schoenmaat→opzetsteken-paren, geen toelichting op de onderliggende aannames.
-
-## 2026-07-12 — Sokkentool: breitermen naar Engels + voetomtrek-veld weg
-Op verzoek: alle breitechniektermen consistent Engels (steken→stitches, rijen→rows, ronde→round, opzetten→cast on, recht/averecht→knit/purl, boord→cuff, hiel→heel, teen→toe), rest van de UI blijft Nederlands. Daarnaast het handmatige "Voetomtrek"-veld verwijderd — dat werd toch al automatisch afgeleid uit de EU-schoenmaat en stond gebruikers soms op een verkeerde default (21). `circumference` is nu een verborgen `<input type="hidden">`, alleen gevuld via `updateCircFromEuSize()` (zie fix hierboven voor hoe die functie zich uiteindelijk gedraagt).
 
 

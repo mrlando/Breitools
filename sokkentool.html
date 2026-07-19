@@ -58,6 +58,7 @@
       <label for="euSize">EU-schoenmaat</label>
       <input type="text" inputmode="decimal" id="euSize" value="39">
       <p class="field-hint">Basis voor de maat: bepaalt de voetlengte (vuistregel EU-maat × ⅔ cm − 1,5 cm) en de voetomtrek (Regia's cast-on-tabel, omgerekend naar jouw gauge/ease). Pas je de voetlengte hieronder handmatig aan, dan wordt de schoenmaat teruggerekend.</p>
+      <p class="field-hint" id="sizeRangeHint"></p>
     </div>
     <div class="field">
       <label for="footLength">Voetlengte (cm)</label>
@@ -211,6 +212,15 @@
     return (footLength + 1.5) / (2 / 3);
   }
 
+  const sizeRangeHint = document.getElementById('sizeRangeHint');
+
+  function updateSizeRangeHint() {
+    const euSize = parseNum(euSizeInput.value);
+    if (isNaN(euSize) || euSize <= 0) { sizeRangeHint.textContent = ''; return; }
+    const rounded = Math.round(euSize);
+    sizeRangeHint.innerHTML = '<strong>Maatrange:</strong> deze sok (dankzij rek van de rib/stockinette) past comfortabel van EU ' + (rounded - 1) + ' t/m ' + (rounded + 1) + ' — vergelijkbaar met de "' + (rounded - 1) + '-' + (rounded + 1) + '" op verpakkingen van gekochte sokken.';
+  }
+
   euSizeInput.addEventListener('input', () => {
     if (syncingSize) return;
     const euSize = parseNum(euSizeInput.value);
@@ -219,6 +229,7 @@
     footLengthInput.value = fmt(euSizeToFootLength(euSize));
     syncingSize = false;
     updateCircFromEuSize();
+    updateSizeRangeHint();
     calculate();
   });
 
@@ -230,6 +241,7 @@
     euSizeInput.value = fmt(footLengthToEuSize(footLength));
     syncingSize = false;
     updateCircFromEuSize();
+    updateSizeRangeHint();
     calculate();
   });
 
@@ -237,6 +249,7 @@
     .forEach(el => el.addEventListener('input', calculate));
 
   updateCircFromEuSize();
+  updateSizeRangeHint();
   calculate();
 </script>
 </body>
