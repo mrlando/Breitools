@@ -262,18 +262,8 @@
     html += stepHtml(3, footRounds + ' rounds vanaf einde heel tot toe',
       'In the round op alle ' + sockSts + ' stitches — ' + fmt(footRoundsExact / rowPerCm) + ' cm vanaf einde heel tot toe (heel: ' + heelRows + ' rows, niet meegerekend)' + footTrimNote + '.');
 
-    const cadence = [];
-    if (toe.row.r4) cadence.push(toe.row.r4 + '× in de 4e ronde');
-    if (toe.row.r3) cadence.push(toe.row.r3 + '× elke 3e ronde');
-    if (toe.row.r2) cadence.push(toe.row.r2 + '× elke 2e ronde');
-    cadence.push('daarna elke ronde tot ' + toe.finalSts + ' steken over');
-
-    html += stepHtml(4, toeRounds + ' rounds teen minderen (bandspits)',
-      'Naald 1 en 3: tot 3 steken voor het eind, 2 steken recht samen, laatste steek recht. ' +
-      'Naald 2 en 4: 1e steek recht, dan een overhaling — 4 steken minder per afnameronde. ' +
-      'Cadans: 1e afnameronde, ' + cadence.join(', ') + '. ' +
-      'Tot slot een dubbele draad door de laatste ' + toe.finalSts +
-      ' steken rijgen en strak aantrekken. Lengte: ' + fmt(toeRounds / rowPerCm) + ' cm.');
+    html += stepHtml(4, toeRounds + ' rounds teen minderen',
+      'Bandspits tot ' + toe.finalSts + ' steken over — ' + fmt(toeRounds / rowPerCm) + ' cm.');
 
     const euSize = parseNum(euSizeInput.value);
     if (!isNaN(euSize) && euSize > 0) {
