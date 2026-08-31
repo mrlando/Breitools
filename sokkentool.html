@@ -81,7 +81,7 @@
     </div>
     <div class="field">
       <label for="footTrim">Rondjes eraf — voet</label>
-      <input type="text" inputmode="decimal" id="footTrim" value="4">
+      <input type="text" inputmode="decimal" id="footTrim" value="0">
       <p class="field-hint">Alleen het rechte stuk tussen hiel en teen.</p>
     </div>
   </div>
@@ -134,6 +134,44 @@
         return a.sts + t * (b.sts - a.sts);
       }
     }
+  }
+
+  // Regia 4-ply bandspits ("Decreases for banded toe after first decrease round").
+  // Per afnameronde verdwijnen 4 steken: naald 1 en 3 twee steken recht samen,
+  // naald 2 en 4 een overhaling. r4/r3/r2 = hoe vaak er in de 4e, elke 3e en elke
+  // 2e ronde geminderd wordt; daarna elke ronde. De tabel-cadans komt bij elke maat
+  // exact op 8 steken uit; dit patroon breit door tot er 4 over zijn.
+  const TOE_TABLE = [
+    { sts: 44, r4: 0, r3: 1, r2: 3 }, { sts: 48, r4: 0, r3: 1, r2: 3 },
+    { sts: 52, r4: 0, r3: 2, r2: 3 }, { sts: 56, r4: 0, r3: 2, r2: 3 },
+    { sts: 60, r4: 1, r3: 2, r2: 3 }, { sts: 64, r4: 1, r3: 2, r2: 3 },
+    { sts: 68, r4: 1, r3: 2, r2: 4 }, { sts: 72, r4: 1, r3: 2, r2: 4 }
+  ];
+  const FINAL_TOE_STS = 4;
+  const TOE_DEC_PER_ROUND = 4;
+
+  // Loopt de cadans af en telt de rondjes; stopt zodra een volgende afname onder
+  // FINAL_TOE_STS zou uitkomen, zodat een afwijkend steekaantal ook netjes eindigt.
+  function toeShaping(startSts) {
+    const row = TOE_TABLE.reduce(function (best, r) {
+      return Math.abs(r.sts - startSts) < Math.abs(best.sts - startSts) ? r : best;
+    });
+    let sts = startSts;
+    let rounds = 0;
+    const canDecrease = function () { return sts - TOE_DEC_PER_ROUND >= FINAL_TOE_STS; };
+    // [rondjes per afname, aantal keer] — de eerste afnameronde staat los in de tabel
+    const phases = [[1, 1], [4, row.r4], [3, row.r3], [2, row.r2]];
+    phases.forEach(function (phase) {
+      for (let i = 0; i < phase[1] && canDecrease(); i++) {
+        rounds += phase[0];
+        sts -= TOE_DEC_PER_ROUND;
+      }
+    });
+    while (canDecrease()) {
+      rounds += 1;
+      sts -= TOE_DEC_PER_ROUND;
+    }
+    return { rounds: rounds, finalSts: sts, row: row };
   }
 
   function stepHtml(num, title, detail) {
@@ -190,14 +228,9 @@
     const turnsPerSide = Math.round((heelSts - centerSts) / 2);
     const heelRows = turnsPerSide * 2;
 
-    // Teen: fase 1 -4 st/2 rondes tot 50%, fase 2 -4 st/ronde tot 8-12 st
-    const finalToeSts = sockSts >= 40 ? 12 : 8;
-    const phase1Target = Math.max(roundToMultiple(sockSts / 2, 4), finalToeSts + 8);
-    const decEventsPhase1 = Math.round((sockSts - phase1Target) / 4);
-    const roundsPhase1 = decEventsPhase1 * 2;
-    const decEventsPhase2 = Math.round((phase1Target - finalToeSts) / 4);
-    const roundsPhase2 = decEventsPhase2;
-    const toeRounds = roundsPhase1 + roundsPhase2;
+    // Teen: Regia 4-ply bandspits, doorgebreid tot 4 steken
+    const toe = toeShaping(sockSts);
+    const toeRounds = toe.rounds;
 
     // Voet: recht stuk tussen hiel-turn en teen, dus voetlengte min hiel-diepte min teenlengte
     const totalFootRows = Math.round(footLength * rowPerCm);
@@ -229,6 +262,19 @@
     html += stepHtml(3, footRounds + ' rounds vanaf einde heel tot toe',
       'In the round op alle ' + sockSts + ' stitches — ' + fmt(footRoundsExact / rowPerCm) + ' cm vanaf einde heel tot toe (heel: ' + heelRows + ' rows, niet meegerekend)' + footTrimNote + '.');
 
+    const cadence = [];
+    if (toe.row.r4) cadence.push(toe.row.r4 + '× in de 4e ronde');
+    if (toe.row.r3) cadence.push(toe.row.r3 + '× elke 3e ronde');
+    if (toe.row.r2) cadence.push(toe.row.r2 + '× elke 2e ronde');
+    cadence.push('daarna elke ronde tot ' + toe.finalSts + ' steken over');
+
+    html += stepHtml(4, toeRounds + ' rounds teen minderen (bandspits)',
+      'Naald 1 en 3: tot 3 steken voor het eind, 2 steken recht samen, laatste steek recht. ' +
+      'Naald 2 en 4: 1e steek recht, dan een overhaling — 4 steken minder per afnameronde. ' +
+      'Cadans: 1e afnameronde, ' + cadence.join(', ') + '. ' +
+      'Tot slot een dubbele draad door de laatste ' + toe.finalSts +
+      ' steken rijgen en strak aantrekken. Lengte: ' + fmt(toeRounds / rowPerCm) + ' cm.');
+
     const euSize = parseNum(euSizeInput.value);
     if (!isNaN(euSize) && euSize > 0) {
       // Center rondt naar beneden af, tenzij euSize dicht genoeg (>= drempel) bij de
@@ -241,7 +287,7 @@
       const center = Math.floor(euSize) + (frac >= rangeSwitchThreshold ? 1 : 0);
       const lower = center - 1;
       const upper = center + 1;
-      html += stepHtml(4, 'Comfortabele maatrange',
+      html += stepHtml(5, 'Comfortabele maatrange',
         'Deze sok past bij EU-schoenmaat <span class="step-range-value">' + lower + '–' + upper + '</span>.');
     }
 
