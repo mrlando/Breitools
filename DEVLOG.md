@@ -2,6 +2,9 @@
 
 (oudere entries: zie DEVLOG_ARCHIVE.md)
 
+## 2026-08-31 — Maatrange brak middenin af ("37" op regel 1, "39" op regel 2)
+`.step-range-value` (1,6em, bold) stond inline in de lopende zin, dus op smalle schermen viel het afbreekpunt precies op het en-streepje en werd de range over twee regels gesplitst — onleesbaar voor het enige getal dat in dat blok telt. Klasse omgezet naar `display: block` met `margin-top: 4px` en `white-space: nowrap`, zodat de waarde altijd op een eigen regel staat en nooit intern afbreekt. De punt en de spatie vóór de span zijn uit de drie call-sites gehaald, want die bungelden na de verplaatsing los onder het getal. Geldt voor beide pagina's die de klasse gebruiken: `sokkentool.html` (stap 5) en `schoenmaat.html` (stap 1 en 2). Geverifieerd op 320px (smalste realistische telefoon): range rendert als één regel, `display: block`, `white-space: nowrap`; schoenmaat toont "39" en "38–40" idem; geen pagefouten. VERSION → 43.
+
 ## 2026-08-31 — Sokkentool: teen-stap teruggebracht tot het getal
 De teen-stap uit v41 spelde de hele Regia-cadans uit (naaldinstructies, "1× in de 4e ronde, 2× elke 3e ronde, ...", dichttrekken met dubbele draad). Broe kent haar eigen teen; de tool hoeft die tabel niet te reproduceren, hij moet er alleen mee rékenen. Staptekst teruggebracht tot "24 rounds teen minderen — Bandspits tot 4 steken over — 5,7 cm". De `TOE_TABLE` en `toeShaping()` blijven ongewijzigd in de code, want daar komt het rondje-aantal vandaan; alleen de weergave is gestript. Geverifieerd: teen-rondjes per maat identiek aan v41 (22→15, 24→16, 28→19, 32→20, 36/38→24, 40→25, 44→27, 46→28), geen pagefouten. VERSION → 42.
 

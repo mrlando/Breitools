@@ -193,7 +193,15 @@ input:focus {
 .step-body { flex: 1; }
 .step-title { display: block; font-weight: 700; font-size: 0.95em; }
 .step-detail { display: block; font-size: 0.84em; opacity: 0.85; margin-top: 3px; line-height: 1.4; }
-.step-range-value { font-size: 1.6em; font-weight: 800; opacity: 1; letter-spacing: -0.01em; }
+.step-range-value {
+  display: block;
+  margin-top: 4px;
+  white-space: nowrap;
+  font-size: 1.6em;
+  font-weight: 800;
+  opacity: 1;
+  letter-spacing: -0.01em;
+}
 
 /* Startscherm met tool-kaarten */
 .tool-list { list-style: none; padding: 0; margin: 0; }

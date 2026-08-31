@@ -73,8 +73,8 @@
     const upper = center + 1;
 
     let html = '';
-    html += stepHtml(1, 'EU-schoenmaat', 'Bij ' + fmt(footLength) + ' cm hoort EU-maat <span class="step-range-value">' + fmt(euSize) + '</span>.');
-    html += stepHtml(2, 'Comfortabele maatrange', 'Deze sok past bij EU-schoenmaat <span class="step-range-value">' + lower + '–' + upper + '</span>.');
+    html += stepHtml(1, 'EU-schoenmaat', 'Bij ' + fmt(footLength) + ' cm hoort EU-maat<span class="step-range-value">' + fmt(euSize) + '</span>');
+    html += stepHtml(2, 'Comfortabele maatrange', 'Deze sok past bij EU-schoenmaat<span class="step-range-value">' + lower + '–' + upper + '</span>');
 
     stepsList.innerHTML = html;
   }
