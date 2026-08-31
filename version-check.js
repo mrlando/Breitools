@@ -8,6 +8,21 @@
     history.replaceState(null, '', clean);
   }
 
+  // Toont de daadwerkelijk geserveerde versie op het startscherm, zodat het getal in
+  // de HTML nooit uit de pas kan lopen met VERSION. De fetch kan al klaar zijn voordat
+  // de body geparsed is, dus onthouden en bij DOMContentLoaded alsnog toepassen.
+  var latestVersion = null;
+
+  function showVersion(v) {
+    latestVersion = v;
+    var el = document.getElementById('buildVersion');
+    if (el) el.textContent = v;
+  }
+
+  document.addEventListener('DOMContentLoaded', function () {
+    if (latestVersion) showVersion(latestVersion);
+  });
+
   function reloadWithVersion(v) {
     var sep = location.search ? '&' : '?';
     location.replace(location.pathname + location.search + sep + '_v=' + v);
@@ -21,6 +36,7 @@
       .then(function (r) { return r.text(); })
       .then(function (v) {
         v = v.trim();
+        showVersion(v);
         var stored = localStorage.getItem('buildVersion');
         if (stored && stored !== v) {
           localStorage.setItem('buildVersion', v);
