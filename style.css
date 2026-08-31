@@ -99,6 +99,13 @@ label {
   line-height: 1.35;
 }
 
+/* Advies-regel: mag opvallen tussen de gewone grijze hints */
+.field-hint.suggestion {
+  color: var(--wool-terracotta);
+  opacity: 0.9;
+  font-weight: 600;
+}
+
 input {
   width: 100%;
   padding: 14px 16px;
