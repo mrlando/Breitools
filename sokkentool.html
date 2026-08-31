@@ -73,6 +73,11 @@
       <input type="text" inputmode="decimal" id="cuffLength" value="4">
       <p class="field-hint">Hoeveel van de beenlengte in rib gebreid wordt (bv. 4 cm); de rest is stockinette.</p>
     </div>
+    <div class="field">
+      <label for="roundsTrim">Rondjes eraf (been en voet)</label>
+      <input type="text" inputmode="decimal" id="roundsTrim" value="4">
+      <p class="field-hint">Persoonlijke correctie: zoveel rondjes gaan er van zowel het been als de voet af, omdat het breiwerk in de praktijk iets langer uitvalt dan de rijgauge voorspelt. Zet op 0 voor de pure berekening; de rib blijft altijd ongemoeid.</p>
+    </div>
   </div>
 
   <ol class="steps" id="stepsList"></ol>
@@ -92,6 +97,7 @@
   const footLengthInput = document.getElementById('footLength');
   const legLengthInput = document.getElementById('legLength');
   const cuffLengthInput = document.getElementById('cuffLength');
+  const roundsTrimInput = document.getElementById('roundsTrim');
   const stepsList = document.getElementById('stepsList');
 
   function roundToMultiple(x, m) {
@@ -139,6 +145,9 @@
     const footLength = parseNum(footLengthInput.value);
     const legLength = parseNum(legLengthInput.value);
     const cuffLength = parseNum(cuffLengthInput.value);
+    // Leeg veld of onzin telt als 0; nooit negatief (het veld haalt alleen rondjes af)
+    const roundsTrimRaw = parseNum(roundsTrimInput.value);
+    const roundsTrim = isNaN(roundsTrimRaw) ? 0 : Math.max(Math.round(roundsTrimRaw), 0);
 
     if ([gauge, rowGauge, circumference, ease, ribKnit, ribPurl, footLength, legLength, cuffLength].some(isNaN)
         || gauge <= 0 || rowGauge <= 0 || circumference <= 0 || ease >= 100 || ribKnit <= 0 || ribPurl <= 0 || footLength <= 0 || legLength < 0
@@ -155,9 +164,11 @@
     const exactSts = effectiveCirc * stPerCm;
     const sockSts = roundToMultiple(exactSts, multiple);
 
-    // Been: boord (rib) + stockinette
-    const legRows = Math.round(legLength * rowPerCm);
+    // Been: boord (rib) + stockinette. De correctie gaat volledig van de stockinette af —
+    // ondergrens cuffRows, zodat de rib nooit korter wordt dan de ingestelde cufflengte.
     const cuffRows = Math.round(cuffLength * rowPerCm);
+    const legRowsExact = Math.round(legLength * rowPerCm);
+    const legRows = Math.max(legRowsExact - roundsTrim, cuffRows);
     const stockinetteRows = Math.max(legRows - cuffRows, 0);
 
     // Hiel (German short row, geen gusset): werkt over de helft van de steken
@@ -177,15 +188,20 @@
 
     // Voet: recht stuk tussen hiel-turn en teen, dus voetlengte min hiel-diepte min teenlengte
     const totalFootRows = Math.round(footLength * rowPerCm);
-    const footRounds = Math.max(totalFootRows - heelRows - toeRounds, 0);
+    const footRoundsExact = Math.max(totalFootRows - heelRows - toeRounds, 0);
+    const footRounds = Math.max(footRoundsExact - roundsTrim, 0);
+
+    // De getoonde cm blijft de gewenste lengte: het aantal rondjes is gecorrigeerd juist
+    // omdat die rondjes in de praktijk op die lengte uitkomen.
+    const trimNote = roundsTrim > 0 ? ' (' + roundsTrim + ' rondjes correctie)' : '';
 
     let html = '';
     html += stepHtml(1, sockSts + ' stitches cast on (cuff)',
       'Long-tail of German twisted cast-on, ' + ribKnit + 'x' + ribPurl + ' rib. Effectieve omtrek: ' + fmt(effectiveCirc) + ' cm.');
     html += stepHtml(2, legRows + ' rounds been breien',
-      cuffRows + ' rounds ' + ribKnit + 'x' + ribPurl + ' rib (' + fmt(cuffLength) + ' cm cuff), dan ' + stockinetteRows + ' rounds stockinette tot de heel — samen ' + fmt(legLength) + ' cm.');
+      cuffRows + ' rounds ' + ribKnit + 'x' + ribPurl + ' rib (' + fmt(cuffLength) + ' cm cuff), dan ' + stockinetteRows + ' rounds stockinette tot de heel — samen ' + fmt(legLength) + ' cm' + trimNote + '.');
     html += stepHtml(3, footRounds + ' rounds vanaf einde heel tot toe',
-      'In the round op alle ' + sockSts + ' stitches — ' + fmt(footRounds / rowPerCm) + ' cm vanaf einde heel tot toe (heel: ' + heelRows + ' rows, niet meegerekend).');
+      'In the round op alle ' + sockSts + ' stitches — ' + fmt(footRoundsExact / rowPerCm) + ' cm vanaf einde heel tot toe (heel: ' + heelRows + ' rows, niet meegerekend)' + trimNote + '.');
 
     const euSize = parseNum(euSizeInput.value);
     if (!isNaN(euSize) && euSize > 0) {
@@ -250,7 +266,7 @@
     calculate();
   });
 
-  [gaugeInput, rowGaugeInput, easeInput, ribKnitInput, ribPurlInput, legLengthInput, cuffLengthInput]
+  [gaugeInput, rowGaugeInput, easeInput, ribKnitInput, ribPurlInput, legLengthInput, cuffLengthInput, roundsTrimInput]
     .forEach(el => el.addEventListener('input', calculate));
 
   updateCircFromEuSize();
