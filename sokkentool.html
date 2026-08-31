@@ -76,13 +76,13 @@
     <div class="field">
       <label for="legTrim">Rondjes eraf — been</label>
       <input type="text" inputmode="decimal" id="legTrim" value="4">
-      <p class="field-hint">Persoonlijke correctie omdat het breiwerk in de praktijk iets langer uitvalt dan de rijgauge voorspelt. Gaat volledig van de stockinette af; de rib blijft ongemoeid. Zet op 0 voor de pure berekening.</p>
+      <p class="field-hint">Gaat van de stockinette af; de rib blijft ongemoeid.</p>
       <p class="field-hint suggestion" id="legTrimHint" hidden></p>
     </div>
     <div class="field">
       <label for="footTrim">Rondjes eraf — voet</label>
       <input type="text" inputmode="decimal" id="footTrim" value="4">
-      <p class="field-hint">Idem voor het rechte stuk tussen hiel en teen. Hiel en teen zelf worden nooit gecorrigeerd.</p>
+      <p class="field-hint">Alleen het rechte stuk tussen hiel en teen.</p>
     </div>
   </div>
 
@@ -212,9 +212,8 @@
       legTrimHint.hidden = true;
     } else {
       legTrimHint.hidden = false;
-      legTrimHint.textContent = 'Advies bij ' + fmt(stockinetteCm) + ' cm stockinette (' +
-        fmt(legLength) + ' cm been − ' + fmt(cuffLength) + ' cm cuff): ' + suggestedLegTrim +
-        (suggestedLegTrim === 1 ? ' rondje' : ' rondjes') + ' eraf.';
+      legTrimHint.textContent = 'Bij deze lengte zou ik ' + suggestedLegTrim +
+        (suggestedLegTrim === 1 ? ' rondje' : ' rondjes') + ' eraf halen.';
     }
 
     // De getoonde cm blijft de gewenste lengte: het aantal rondjes is gecorrigeerd juist
