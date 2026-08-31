@@ -2,6 +2,9 @@
 
 (oudere entries: zie DEVLOG_ARCHIVE.md)
 
+## 2026-08-31 — Teen heet "bandteen", niet "bandspits"
+"Bandspits" was een eigen vertaling van het Duitse *Bandspitze* en geen bestaande Nederlandse breiterm. Broe noemt het een bandteen. Aangepast in de staptekst ("Bandteen tot 4 steken over — 5,7 cm") en in de twee codecommentaren bij `TOE_TABLE` en de teenberekening. Puur terminologie; de berekening is ongewijzigd. VERSION → 44.
+
 ## 2026-08-31 — Maatrange brak middenin af ("37" op regel 1, "39" op regel 2)
 `.step-range-value` (1,6em, bold) stond inline in de lopende zin, dus op smalle schermen viel het afbreekpunt precies op het en-streepje en werd de range over twee regels gesplitst — onleesbaar voor het enige getal dat in dat blok telt. Klasse omgezet naar `display: block` met `margin-top: 4px` en `white-space: nowrap`, zodat de waarde altijd op een eigen regel staat en nooit intern afbreekt. De punt en de spatie vóór de span zijn uit de drie call-sites gehaald, want die bungelden na de verplaatsing los onder het getal. Geldt voor beide pagina's die de klasse gebruiken: `sokkentool.html` (stap 5) en `schoenmaat.html` (stap 1 en 2). Geverifieerd op 320px (smalste realistische telefoon): range rendert als één regel, `display: block`, `white-space: nowrap`; schoenmaat toont "39" en "38–40" idem; geen pagefouten. VERSION → 43.
 

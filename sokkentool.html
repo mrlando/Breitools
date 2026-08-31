@@ -136,7 +136,7 @@
     }
   }
 
-  // Regia 4-ply bandspits ("Decreases for banded toe after first decrease round").
+  // Regia 4-ply bandteen ("Decreases for banded toe after first decrease round").
   // Per afnameronde verdwijnen 4 steken: naald 1 en 3 twee steken recht samen,
   // naald 2 en 4 een overhaling. r4/r3/r2 = hoe vaak er in de 4e, elke 3e en elke
   // 2e ronde geminderd wordt; daarna elke ronde. De tabel-cadans komt bij elke maat
@@ -228,7 +228,7 @@
     const turnsPerSide = Math.round((heelSts - centerSts) / 2);
     const heelRows = turnsPerSide * 2;
 
-    // Teen: Regia 4-ply bandspits, doorgebreid tot 4 steken
+    // Teen: Regia 4-ply bandteen, doorgebreid tot 4 steken
     const toe = toeShaping(sockSts);
     const toeRounds = toe.rounds;
 
@@ -263,7 +263,7 @@
       'In the round op alle ' + sockSts + ' stitches — ' + fmt(footRoundsExact / rowPerCm) + ' cm vanaf einde heel tot toe (heel: ' + heelRows + ' rows, niet meegerekend)' + footTrimNote + '.');
 
     html += stepHtml(4, toeRounds + ' rounds teen minderen',
-      'Bandspits tot ' + toe.finalSts + ' steken over — ' + fmt(toeRounds / rowPerCm) + ' cm.');
+      'Bandteen tot ' + toe.finalSts + ' steken over — ' + fmt(toeRounds / rowPerCm) + ' cm.');
 
     const euSize = parseNum(euSizeInput.value);
     if (!isNaN(euSize) && euSize > 0) {
