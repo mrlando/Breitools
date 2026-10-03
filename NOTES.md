@@ -18,6 +18,7 @@ new tool = new .html + card in index.html `.tool-list` (multi-page, chosen 2026-
 needs `git config core.hooksPath .githooks` per clone (set here).
 ! don't bump VERSION by hand — hook does it, you'd double-count.
 ! docs-only commit (NOTES.md etc): commit with `--no-verify`, else every PWA client force-reloads for nothing.
+after push → tell Broe resulting VERSION ("gepusht als vN"); announcing a push → name next number. docs-only commit (--no-verify) = no bump, say so.
 version-check.js `showVersion()` fills the `#buildVersion` span from the fetched VERSION; the literal in index.html is only the offline fallback. before showVersion existed the span was hardcoded and silently lagged (showed v36 while v39 was live).
 
 ## sok maths
