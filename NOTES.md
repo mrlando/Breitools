@@ -18,7 +18,7 @@ new tool = new .html + card in index.html `.tool-list` (multi-page, chosen 2026-
 needs `git config core.hooksPath .githooks` per clone (set here).
 ! don't bump VERSION by hand — hook does it, you'd double-count.
 ! docs-only commit (NOTES.md etc): commit with `--no-verify`, else every PWA client force-reloads for nothing.
-after push → tell Broe resulting VERSION ("gepusht als vN"); announcing a push → name next number. docs-only commit (--no-verify) = no bump, say so.
+after push → tell user resulting VERSION ("gepusht als vN"); announcing a push → name next number. docs-only commit (--no-verify) = no bump, say so.
 version-check.js `showVersion()` fills the `#buildVersion` span from the fetched VERSION; the literal in index.html is only the offline fallback. before showVersion existed the span was hardcoded and silently lagged (showed v36 while v39 was live).
 
 ## sok maths
@@ -32,7 +32,7 @@ heel/toe steps not shown (user does those unaided) but heelSts/centerSts/turnsPe
 cast-on rounded to multiple of ribKnit+ribPurl (roundToMultiple). ease >= 100% = invalid.
 in-the-round (leg/foot/toe) = rounds; heel = rows (flat).
 manual round correction: `legTrim` (default 4) and `footTrim` (default 0), both subtract from stockinette only — legRows = max(legRowsExact − legTrim, cuffRows) so the rib never shrinks below the set cuff; footRounds = max(footRoundsExact − footTrim, 0). negatives clamp to 0 (iOS number keypad has no minus). heel and toe untouched. displayed cm stays the wanted length, not back-computed — that is the point; "(N rondjes correctie)" is appended to the step when > 0.
-suggestedLegTrim = round((legLength − cuffLength) / 4) ≈ 1 round per 4 cm stockinette, calibrated on Broe's sock (15 cm stockinette → 4). hint `#legTrimHint` (.field-hint.suggestion) shows only when it differs from the entered value. foot gets no suggestion on purpose: it is nearly flat across sizes (4 from EU 38 up, 3 for 32-36) because a bigger size also grows the heel and toe.
+suggestedLegTrim = round((legLength − cuffLength) / 4) ≈ 1 round per 4 cm stockinette, calibrated on user's sock (15 cm stockinette → 4). hint `#legTrimHint` (.field-hint.suggestion) shows only when it differs from the entered value. foot gets no suggestion on purpose: it is nearly flat across sizes (4 from EU 38 up, 3 for 32-36) because a bigger size also grows the heel and toe.
 open: leg and foot knit up longer than gauge predicts and the three measurements (rib exactly 42 rows/10cm, hand-counted stockinette also 42, measured section lengths implying ~38-40) cannot be reconciled. no root cause; the trim fields are the accepted workaround. footTrim went back to 0 once the banded-toe fix landed — it had been compensating for the toe error.
 cuffRows + stockinetteRows = total leg length (cuff included, not added on top).
 toe = Regia 4-ply banded toe ("bandteen" in Dutch — ! not "bandspits", that was an invented translation of Bandspitze). TOE_TABLE (~144) holds the per-cast-on cadence after the first decrease round (4x every 4th round, 3x every 3rd, 2x every 2nd, then every round); toeShaping() picks the nearest row, runs the phases, then decreases every round down to FINAL_TOE_STS = 4, with a guard so a cast-on outside the table (e.g. 1x1 rib) still lands exactly. sts check: all 13 table sizes reach 8 sts on the cadence, pattern then knits on to 4. rounds per cast-on: 44→15, 48→16, 52→19, 56→20, 60→24, 64→25, 68→27, 72→28.
